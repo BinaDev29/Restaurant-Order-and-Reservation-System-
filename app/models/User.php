@@ -11,6 +11,13 @@ class User
 
     public function register($name, $email, $password, $phone = '', $role = 'customer')
     {
+        // Check if email already exists
+        $checkStmt = $this->pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $checkStmt->execute([$email]);
+        if ($checkStmt->fetch()) {
+            return false; // Email already taken
+        }
+
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $this->pdo->prepare("INSERT INTO users (full_name, email, password, phone, role) VALUES (?, ?, ?, ?, ?)");
         return $stmt->execute([$name, $email, $hash, $phone, $role]);

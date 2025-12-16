@@ -14,7 +14,7 @@ $auth->register();
     <title>Register | <?php echo APP_NAME; ?></title>
     <!-- Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap"
         rel="stylesheet">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -23,165 +23,298 @@ $auth->register();
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .auth-container {
+        body {
+            overflow-x: hidden;
+            background-color: var(--dark-bg);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .split-layout {
             min-height: 100vh;
+        }
+
+        .image-side {
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Beyaynetu.jpg/1280px-Beyaynetu.jpg') no-repeat center center/cover;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 4rem;
+        }
+
+        /* Dark overlay */
+        .image-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            z-index: 1;
+        }
+
+        .quote-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 16px;
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .form-side {
+            background-color: var(--dark-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Beyaynetu.jpg/1280px-Beyaynetu.jpg') no-repeat center center/cover;
-            padding: 20px;
-        }
-
-        .auth-card {
-            background-color: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 460px;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            padding: 2rem;
             position: relative;
         }
 
-        .lang-selector {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: color 0.3s;
+        [data-theme="light"] .form-side {
+            background-color: #ffffff;
         }
 
-        .lang-selector:hover {
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Language Selector - Top Right */
+        .lang-selector {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            z-index: 10;
+        }
+
+        .lang-selector .dropdown-toggle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .lang-selector .dropdown-toggle:hover {
             color: var(--primary-color);
         }
 
-        /* Custom Flag Select override */
-        .flag-select {
-            background-color: transparent !important;
-            border-right: 0 !important;
-            color: #fff !important;
+        [data-theme="light"] .lang-selector .dropdown-toggle {
+            color: #555;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Floating Label overrides */
+        .form-floating>.form-control,
+        .form-floating>.form-select {
+            background-color: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: var(--text-color) !important;
+        }
+
+        .form-floating>.form-control:focus,
+        .form-floating>.form-select:focus {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
+
+        .form-floating>label {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-floating>.form-select option {
+            background-color: #000;
+            color: #fff;
+        }
+
+        [data-theme="light"] .form-floating>.form-control,
+        [data-theme="light"] .form-floating>.form-select {
+            background-color: #f8f9fa !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: #000 !important;
+        }
+
+        [data-theme="light"] .form-floating>label {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] .form-floating>.form-select option {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .btn-social {
+            transition: all 0.2s ease;
+        }
+
+        .btn-social:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            z-index: 100;
         }
     </style>
 </head>
 
 <body>
-    <div class="auth-container">
-        <div class="auth-card fade-in-up">
-            <!-- Language Selector -->
-            <div class="lang-selector dropdown">
-                <a class="text-decoration-none text-light dropdown-toggle" href="#" role="button"
-                    data-bs-toggle="dropdown">
-                    <i class="fas fa-globe me-1"></i> EN
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end small shadow">
-                    <li><a class="dropdown-item active" href="#">English (EN)</a></li>
-                    <li><a class="dropdown-item" href="#">Amharic (AM)</a></li>
-                    <li><a class="dropdown-item" href="#">Français (FR)</a></li>
-                </ul>
-            </div>
-
-            <!-- Header -->
-            <div class="text-center mb-5 mt-2">
-                <a href="index.php" class="text-decoration-none">
-                    <h2 class="text-primary-gold Playfair mb-2"><i
-                            class="fas fa-utensils me-2"></i><?php echo APP_NAME; ?></h2>
-                </a>
-                <p class="text-white-50 small letter-spacing-1 text-uppercase">New Account Registration</p>
-            </div>
-
-            <!-- Social Login -->
-            <div class="d-grid gap-3 mb-4">
-                <button type="button"
-                    class="btn btn-light d-flex align-items-center justify-content-center gap-3 py-2 fw-bold text-dark border-0 shadow-sm"
-                    style="border-radius: 50px;">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style="width:20px;">
-                    <span>Continue with Google</span>
-                </button>
-            </div>
-
-            <div class="position-relative text-center mb-4">
-                <hr class="border-secondary opacity-25">
-                <span
-                    class="position-absolute top-50 start-50 translate-middle px-3 text-white-50 small bg-dark">OR</span>
-            </div>
-
-            <?php if (isset($_SESSION['flash']['register_error'])): ?>
-                <div class="alert alert-danger py-2 border-0 bg-danger bg-opacity-25 text-danger small mb-4">
-                    <i class="fas fa-exclamation-circle me-1"></i> <?php echo flash('register_error')['message']; ?>
-                </div>
-            <?php endif; ?>
-
-            <form method="POST" action="">
-                <div class="mb-3">
-                    <label class="form-label text-muted small fw-bold ps-1">FULL NAME</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i
-                                class="fas fa-user-circle"></i></span>
-                        <input type="text" name="full_name" class="form-control border-secondary" placeholder="John Doe"
-                            required>
+    <div class="container-fluid p-0 split-layout">
+        <div class="row g-0 h-100 min-vh-100">
+            <!-- Left Side: Image -->
+            <div class="col-lg-6 d-none d-lg-flex image-side">
+                <div class="quote-card fade-in-up">
+                    <h3 class="text-white mb-3" style="font-family: 'Playfair Display', serif; font-style: italic;">
+                        "Every dish tells a story of tradition, passion, and the warmth of Ethiopian hospitality."</h3>
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 40px; height: 1px; background: var(--primary-color);"></div>
+                        <span class="text-uppercase small letter-spacing-1 text-primary-gold fw-bold">Taste the
+                            Authenticity</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label text-muted small fw-bold ps-1">EMAIL ADDRESS</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i
-                                class="fas fa-envelope"></i></span>
-                        <input type="email" name="email" class="form-control border-secondary"
-                            placeholder="name@example.com" required>
-                    </div>
+            <!-- Right Side: Form -->
+            <div class="col-lg-6 form-side">
+                <a href="index.php" class="back-link text-decoration-none text-muted small hover-gold">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                </a>
+
+                <!-- Language Selector -->
+                <div class="lang-selector dropdown">
+                    <a class="text-decoration-none dropdown-toggle d-flex align-items-center gap-2" href="#"
+                        role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-globe"></i> English (US)
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end small shadow border-0"
+                        style="background: var(--card-bg); backdrop-filter: blur(10px);">
+                        <li><a class="dropdown-item text-white-50 hover-gold" href="#">🇺🇸 English</a></li>
+                        <li><a class="dropdown-item text-white-50 hover-gold" href="#">🇪🇹 Amharic</a></li>
+                        <li><a class="dropdown-item text-white-50 hover-gold" href="#">🇫🇷 French</a></li>
+                    </ul>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label text-muted small fw-bold ps-1">PHONE NUMBER</label>
-                    <div class="input-group">
-                        <button
-                            class="btn btn-outline-secondary dropdown-toggle text-white border-secondary flag-select fs-5"
-                            type="button" data-bs-toggle="dropdown">
-                            🇪🇹
+                <div class="form-container fade-in-up">
+                    <div class="mb-5">
+                        <h2 class="fw-bold mb-2 display-6" style="font-family: 'Playfair Display', serif;">Create
+                            Account</h2>
+                        <p class="text-muted">Join us to reserve tables and order exclusive meals.</p>
+                    </div>
+
+                    <!-- Social Login -->
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="button"
+                            class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
+                            style="border-color: rgba(255,255,255,0.15);">
+                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"
+                                style="width:20px;">
+                            <span class="fw-medium">Sign up with Google</span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="#">🇪🇹 +251 (Ethiopia)</a></li>
-                            <li><a class="dropdown-item" href="#">🇺🇸 +1 (USA)</a></li>
-                            <li><a class="dropdown-item" href="#">🇬🇧 +44 (UK)</a></li>
-                            <li><a class="dropdown-item" href="#">🇦🇪 +971 (UAE)</a></li>
-                        </ul>
-                        <input type="tel" name="phone" class="form-control border-secondary"
-                            placeholder="+251 911 234 567" required>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <hr class="flex-grow-1 border-secondary opacity-10 m-0">
+                        <span class="px-3 text-muted small text-uppercase" style="font-size: 0.75rem;">Or register with
+                            email</span>
+                        <hr class="flex-grow-1 border-secondary opacity-10 m-0">
+                    </div>
+
+                    <!-- Alerts -->
+                    <?php if (isset($_SESSION['flash']['register_error'])): ?>
+                        <div
+                            class="alert alert-danger py-2 border-0 bg-danger bg-opacity-10 text-danger small mb-4 rounded-2">
+                            <i class="fas fa-exclamation-circle me-1"></i> <?php echo flash('register_error')['message']; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="full_name" name="full_name" placeholder=" "
+                                required>
+                            <label for="full_name">Full Name</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email" placeholder=" " required>
+                            <label for="email">Email Address</label>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-4">
+                                <div class="form-floating">
+                                    <select class="form-select" id="countryCode">
+                                        <option value="+251">🇪🇹 +251</option>
+                                        <option value="+1">🇺🇸 +1</option>
+                                        <option value="+44">🇬🇧 +44</option>
+                                    </select>
+                                    <label for="countryCode">Code</label>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder=" "
+                                        required>
+                                    <label for="phone">Number</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="position-relative mb-4">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder=" " required>
+                                <label for="password">Create Password</label>
+                            </div>
+                            <span
+                                class="password-toggle position-absolute top-50 end-0 translate-middle-y me-3 text-muted"
+                                onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-gold w-100 py-3 rounded-3 fw-bold shadow-lg">
+                            Create Account
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted small">Already have an account? <a href="login.php"
+                                class="text-primary-gold text-decoration-none fw-bold hover-gold">Log in</a></p>
                     </div>
                 </div>
-
-                <div class="mb-4">
-                    <label class="form-label text-muted small fw-bold ps-1">CREATE PASSWORD</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i
-                                class="fas fa-lock"></i></span>
-                        <input type="password" name="password" class="form-control border-secondary"
-                            placeholder="Min 8 characters" required>
-                    </div>
-                </div>
-
-                <button type="submit"
-                    class="btn btn-primary-gold w-100 py-3 rounded-pill fw-bold text-uppercase letter-spacing-1 shadow-lg mb-4">
-                    Create Account
-                </button>
-
-                <div class="text-center">
-                    <p class="text-muted small mb-0">Already have an account? <a href="login.php"
-                            class="text-primary-gold text-decoration-none fw-bold">Sign In</a></p>
-                </div>
-            </form>
-
-            <div class="text-center mt-4">
-                <a href="index.php" class="text-white-50 text-decoration-none small hover-gold"><i
-                        class="fas fa-arrow-left me-1"></i> Back to Homepage</a>
             </div>
         </div>
     </div>
 
+    <!-- Theme Script & Password Toggle -->
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.querySelector('.password-toggle i');
+
+if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

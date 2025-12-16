@@ -34,6 +34,17 @@ class DashboardController
             $stmt = $this->pdo->query("SELECT COUNT(*) FROM menu_items WHERE is_available = 1");
             $stats['active_items'] = $stmt->fetchColumn();
 
+        } elseif ($this->user['role'] === 'staff') {
+            // Staff Stats: Pending Orders, Today's Reservations, Occupied Tables
+            $stmt = $this->pdo->query("SELECT COUNT(*) FROM orders WHERE order_status IN ('pending', 'preparing', 'ready')");
+            $stats['active_orders_count'] = $stmt->fetchColumn();
+
+            $stmt = $this->pdo->query("SELECT COUNT(*) FROM reservations WHERE reservation_date = CURRENT_DATE");
+            $stats['reservations_today'] = $stmt->fetchColumn();
+
+            $stmt = $this->pdo->query("SELECT COUNT(*) FROM dining_tables WHERE status = 'occupied'");
+            $stats['occupied_tables'] = $stmt->fetchColumn();
+
         } else {
             // User Stats: My Active Orders, My Upcoming Reservations
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM orders WHERE user_id = ? AND order_status NOT IN ('completed', 'cancelled')");
@@ -54,7 +65,7 @@ class DashboardController
     public function getRecentActivity()
     {
         $userId = $this->user['id'];
-        if ($this->user['role'] === 'admin') {
+        if ($this->user['role'] === 'admin' || $this->user['role'] === 'staff') {
             // Recent Orders system wide
             $stmt = $this->pdo->query("SELECT o.*, u.full_name FROM orders o JOIN users u ON o.user_id = u.id ORDER BY created_at DESC LIMIT 5");
         } else {

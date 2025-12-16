@@ -36,10 +36,32 @@ $orders = $controller->index();
 
     <div class="main-content">
         <div class="d-flex justify-content-between align-items-center mb-4 text-white">
-            <h2>Order Management</h2>
-            <?php if (isset($_SESSION['flash']['order_msg'])): ?>
-                <div class="alert alert-success py-1 px-3 mb-0"><?php echo flash('order_msg')['message']; ?></div>
-            <?php endif; ?>
+            <div class="d-flex align-items-center">
+                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 class="mb-0">Order Management</h2>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <?php if (isset($_SESSION['flash']['order_msg'])): ?>
+                    <div class="alert alert-success py-1 px-3 mb-0 d-none d-md-block"><?php echo flash('order_msg')['message']; ?></div>
+                <?php endif; ?>
+
+                <div class="dropdown text-end">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center text-dark fw-bold me-2" style="width: 40px; height: 40px;">
+                            <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark px-2 shadow-lg border-secondary" aria-labelledby="dropdownUser1" style="min-width: 200px;">
+                         <li><div class="dropdown-header text-white fw-bold"><?php echo htmlspecialchars($user['full_name']); ?></div></li>
+                        <li><a class="dropdown-item rounded-2 mb-1" href="profile.php"><i class="fas fa-user-circle me-2 text-primary-gold"></i> Profile</a></li>
+                        <li><hr class="dropdown-divider bg-secondary opacity-25"></li>
+                        <li><a class="dropdown-item rounded-2 text-danger" href="../logout.php"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="card bg-dark border-secondary">
@@ -154,6 +176,11 @@ $orders = $controller->index();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function () {
+            document.querySelector('.sidebar').classList.toggle('show');
+        });
+    </script>
 </body>
 
 </html>
