@@ -1,0 +1,61 @@
+/* Dashboard specific styles */
+.sidebar {
+    height: 100vh;
+    background-color: #111;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    padding-top: 20px;
+    z-index: 1000;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 30px;
+}
+
+.nav-link {
+    color: var(--text-muted);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: rgba(223, 168, 0, 0.1);
+    color: var(--primary-color);
+    border-right: 3px solid var(--primary-color);
+}
+
+.nav-link i {
+    width: 25px;
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.table-dark {
+    --bs-table-bg: #252525;
+    --bs-table-striped-bg: #2a2a2a;
+}

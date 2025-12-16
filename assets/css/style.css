@@ -1,0 +1,416 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
+
+:root {
+    --primary-color: #FCDD09;
+    /* Ethiopian Yellow */
+    --eth-green: #078930;
+    --eth-red: #DA121A;
+    --dark-bg: #111111;
+    --card-bg: rgba(30, 30, 30, 0.5);
+    /* More transparent for clear form */
+    --text-color: #ffffff;
+    --text-muted: #e0e0e0;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+    --nav-bg: rgba(17, 17, 17, 0.95);
+    --section-bg-alt: #151515;
+    --primary-font: 'Outfit', sans-serif;
+    --heading-font: 'Playfair Display', serif;
+}
+
+[data-theme="light"] {
+    --dark-bg: #f8f9fa;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    /* High Contrast Black for Light Mode */
+    --text-color: #000000;
+    --text-muted: #333333;
+    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    /* White Overlay for Light Mode */
+    --bg-overlay: rgba(255, 255, 255, 0.95);
+    --nav-bg: rgba(255, 255, 255, 0.95);
+    --section-bg-alt: #ffffff;
+}
+
+/* Strict Text Color Override for Light Theme */
+[data-theme="light"] body,
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6,
+[data-theme="light"] p,
+[data-theme="light"] span,
+[data-theme="light"] a,
+[data-theme="light"] li,
+[data-theme="light"] div,
+[data-theme="light"] .text-white {
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .text-primary-gold {
+    color: #bfa000 !important;
+    /* Darker Gold for visibility on white */
+}
+
+/* Menu Section Background Variable */
+.menu-section-bg {
+    background-color: var(--section-bg-alt);
+    transition: background-color 0.3s ease;
+}
+
+/* Exceptions for Light Theme */
+[data-theme="light"] .text-muted {
+    color: #555555 !important;
+}
+
+[data-theme="light"] .btn-primary-gold {
+    color: #000000 !important;
+}
+
+[data-theme="light"] .text-ethiopian {
+    color: transparent !important;
+    /* Keep gradient */
+}
+
+/* Re-enable white text for specific dark badges if any */
+[data-theme="light"] .badge.bg-danger {
+    color: #fff !important;
+}
+
+/* Force White Text on Dark Mode globally */
+:root:not([data-theme="light"]) {
+    color: #ffffff !important;
+}
+
+:root:not([data-theme="light"]) h1,
+:root:not([data-theme="light"]) h2,
+:root:not([data-theme="light"]) h3,
+:root:not([data-theme="light"]) h4,
+:root:not([data-theme="light"]) h5,
+:root:not([data-theme="light"]) h6,
+:root:not([data-theme="light"]) p,
+:root:not([data-theme="light"]) span,
+:root:not([data-theme="light"]) a,
+:root:not([data-theme="light"]) div,
+:root:not([data-theme="light"]) label,
+:root:not([data-theme="light"]) input,
+:root:not([data-theme="light"]) li {
+    color: #ffffff;
+}
+
+/* Exception for muted text in dark mode (slightly softer white) */
+:root:not([data-theme="light"]) .text-muted {
+    color: #e0e0e0 !important;
+}
+
+:root:not([data-theme="light"]) .text-white-50 {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+body {
+    font-family: var(--primary-font);
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-image:
+        linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+        url('https://images.unsplash.com/photo-1542365857-3a3a532aad26?auto=format&fit=crop&w=1920&q=80');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--heading-font);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-color);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Text Gradients & Utils */
+.text-ethiopian {
+    background: linear-gradient(90deg, var(--eth-green), var(--primary-color), var(--eth-red));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+.border-ethiopian-bottom {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.border-ethiopian-bottom::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--eth-green), var(--primary-color), var(--eth-red));
+    border-radius: 3px;
+}
+
+/* Buttons */
+.btn-primary-gold {
+    background: linear-gradient(45deg, #FFD700, #FDB931);
+    border: none;
+    color: #000;
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.btn-primary-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    background: linear-gradient(45deg, #FDB931, #FFD700);
+    color: #000;
+}
+
+.btn-outline-light {
+    border-radius: 50px;
+    padding: 12px 30px;
+}
+
+[data-theme="light"] .btn-outline-light {
+    color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+[data-theme="light"] .btn-outline-light:hover {
+    background-color: #1a1a1a;
+    color: #ffffff !important;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 15px 0;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="light"] .navbar {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .navbar-brand,
+[data-theme="light"] .nav-link,
+[data-theme="light"] .navbar-toggler-icon {
+    color: #212529 !important;
+}
+
+[data-theme="light"] .text-white {
+    color: #212529 !important;
+}
+
+[data-theme="light"] .text-white-50 {
+    color: #6c757d !important;
+}
+
+[data-theme="light"] .bg-black {
+    background-color: #f1f1f1 !important;
+}
+
+[data-theme="light"] .bg-dark {
+    background-color: #ffffff !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-family: 'Playfair Display', serif;
+}
+
+/* Cards & Glassmorphism */
+/* Cards & Glassmorphism */
+/* Enhanced Shadow and Clearer Form */
+.card,
+.container-glass {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(15px);
+    /* Stronger blur for glass effect */
+    border: var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    /* Enhanced Shadow */
+}
+
+/* Light Theme Shadow Adjustment */
+[data-theme="light"] .card,
+[data-theme="light"] .container-glass {
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Clearer white in light mode */
+}
+
+.card:hover,
+.container-glass:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.food-card img {
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.food-card:hover img {
+    transform: scale(1.05);
+}
+
+.food-price {
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(17, 17, 17, 1)),
+        url('https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #333;
+}
+
+.hero-content {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3rem;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Cultural Pattern Divider */
+.pattern-divider {
+    height: 10px;
+    background: repeating-linear-gradient(45deg,
+            var(--eth-green),
+            var(--eth-green) 20px,
+            var(--primary-color) 20px,
+            var(--primary-color) 40px,
+            var(--eth-red) 40px,
+            var(--eth-red) 60px);
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Features */
+.feature-icon {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--eth-green), var(--primary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+/* Section Padding */
+.section-padding {
+    padding: 100px 0;
+}
+
+/* Input Fields */
+/* Global Input Styling - Always Dark & Premium */
+.form-control,
+.form-select {
+    background-color: rgba(20, 20, 20, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Remove Light Theme Override - Keep Dark */
+[data-theme="light"] .form-control,
+[data-theme="light"] .form-select {
+    background-color: rgba(20, 20, 20, 0.8) !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* Focus States - Consistent Dark Quality */
+.form-control:focus,
+.form-select:focus,
+[data-theme="light"] .form-control:focus,
+[data-theme="light"] .form-select:focus {
+    background-color: rgba(40, 40, 40, 0.9) !important;
+    color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(253, 221, 9, 0.25);
+}
+
+/* Fix for Select Options Visibility */
+.form-select option {
+    color: #000000;
+    background-color: #ffffff;
+}
+
+/* Fix for Date/Time Calendar Indicators - Always Inverted/White for Dark Inputs */
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+[data-theme="light"] ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    /* Still white because input bg is dark */
+}
+
+/* Light Theme Footer Fix */
+[data-theme="light"] footer {
+    background-color: #f1f1f1 !important;
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] footer .text-white {
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] footer .text-muted {
+    color: #555 !important;
+}
