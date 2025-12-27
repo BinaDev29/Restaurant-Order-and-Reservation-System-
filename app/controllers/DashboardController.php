@@ -34,16 +34,26 @@ class DashboardController
             $stmt = $this->pdo->query("SELECT COUNT(*) FROM menu_items WHERE is_available = 1");
             $stats['active_items'] = $stmt->fetchColumn();
 
-        } elseif ($this->user['role'] === 'staff') {
-            // Staff Stats: Pending Orders, Today's Reservations, Occupied Tables
-            $stmt = $this->pdo->query("SELECT COUNT(*) FROM orders WHERE order_status IN ('pending', 'preparing', 'ready')");
-            $stats['active_orders_count'] = $stmt->fetchColumn();
-
+        } elseif (in_array($this->user['role'], ['staff', 'chef', 'waiter'])) {
+            // Shared Stats for all Staff Types
             $stmt = $this->pdo->query("SELECT COUNT(*) FROM reservations WHERE reservation_date = CURRENT_DATE");
             $stats['reservations_today'] = $stmt->fetchColumn();
 
             $stmt = $this->pdo->query("SELECT COUNT(*) FROM dining_tables WHERE status = 'occupied'");
             $stats['occupied_tables'] = $stmt->fetchColumn();
+
+            // Active Orders (Generic)
+            $stmt = $this->pdo->query("SELECT COUNT(*) FROM orders WHERE order_status IN ('pending', 'preparing', 'ready')");
+            $stats['active_orders_count'] = $stmt->fetchColumn();
+
+            // Chef Specifics
+            if ($this->user['role'] === 'chef') {
+                $stmt = $this->pdo->query("SELECT COUNT(*) FROM orders WHERE order_status = 'pending'");
+                $stats['pending_orders'] = $stmt->fetchColumn();
+
+                $stmt = $this->pdo->query("SELECT COUNT(*) FROM menu_items WHERE is_available = 1");
+                $stats['active_items'] = $stmt->fetchColumn();
+            }
 
         } else {
             // User Stats: My Active Orders, My Upcoming Reservations
@@ -65,7 +75,7 @@ class DashboardController
     public function getRecentActivity()
     {
         $userId = $this->user['id'];
-        if ($this->user['role'] === 'admin' || $this->user['role'] === 'staff') {
+        if (in_array($this->user['role'], ['admin', 'staff', 'chef', 'waiter'])) {
             // Recent Orders system wide
             $stmt = $this->pdo->query("SELECT o.*, u.full_name FROM orders o JOIN users u ON o.user_id = u.id ORDER BY created_at DESC LIMIT 5");
         } else {

@@ -23,10 +23,18 @@ $auth->register();
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-yellow: #FCDD09;
+            --darkER-bg: #0d0d0d;
+            --input-bg: #151515;
+            --border-rgba: rgba(255, 255, 255, 0.08);
+        }
+
         body {
             overflow-x: hidden;
-            background-color: var(--dark-bg);
+            background-color: var(--darkER-bg);
             font-family: 'Outfit', sans-serif;
+            color: #fff;
         }
 
         .split-layout {
@@ -34,49 +42,62 @@ $auth->register();
         }
 
         .image-side {
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Beyaynetu.jpg/1280px-Beyaynetu.jpg') no-repeat center center/cover;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 4rem;
+            padding: 5rem 4rem;
         }
 
-        /* Dark overlay */
-        .image-side::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-            z-index: 1;
+        .quote-container {
+            max-width: 550px;
+            z-index: 2;
         }
 
         .quote-card {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 16px;
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-rgba);
+            padding: 2.5rem;
+            border-radius: 20px;
             position: relative;
-            z-index: 2;
-            max-width: 600px;
-            border-left: 4px solid var(--primary-color);
+            border-left: 5px solid var(--primary-yellow);
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.1rem;
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .quote-sub {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quote-sub::before {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: var(--primary-yellow);
         }
 
         .form-side {
-            background-color: var(--dark-bg);
+            background-color: var(--darkER-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 3rem;
             position: relative;
-        }
-
-        [data-theme="light"] .form-side {
-            background-color: #ffffff;
         }
 
         .form-container {
@@ -84,88 +105,183 @@ $auth->register();
             max-width: 500px;
         }
 
-        /* Language Selector - Top Right */
-        .lang-selector {
+        /* Nav Elements */
+        .back-nav {
             position: absolute;
-            top: 30px;
-            right: 40px;
-            z-index: 10;
+            top: 40px;
+            left: 50px;
         }
 
-        .lang-selector .dropdown-toggle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        .lang-nav {
+            position: absolute;
+            top: 40px;
+            right: 50px;
+        }
+
+        .nav-link {
+            color: #fff;
+            opacity: 0.7;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            color: var(--primary-yellow);
+        }
+
+        /* Heading */
+        .welcome-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-sub {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Inputs */
+        .input-group-custom {
+            margin-bottom: 1.2rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 500;
         }
 
-        .lang-selector .dropdown-toggle:hover {
-            color: var(--primary-color);
+        .custom-input,
+        .custom-select {
+            background: var(--input-bg) !important;
+            border: 1px solid var(--border-rgba) !important;
+            border-radius: 12px !important;
+            padding: 0.9rem 1.1rem !important;
+            color: #fff !important;
+            width: 100%;
+            transition: 0.3s;
         }
 
-        [data-theme="light"] .lang-selector .dropdown-toggle {
-            color: #555;
+        .custom-input:focus,
+        .custom-select:focus {
+            border-color: var(--primary-yellow) !important;
+            box-shadow: 0 0 0 2px rgba(252, 221, 9, 0.1) !important;
+            outline: none;
         }
 
-        /* Password Toggle */
-        .password-toggle {
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        /* Floating Label overrides */
-        .form-floating>.form-control,
-        .form-floating>.form-select {
-            background-color: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: var(--text-color) !important;
-        }
-
-        .form-floating>.form-control:focus,
-        .form-floating>.form-select:focus {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 1px var(--primary-color);
-        }
-
-        .form-floating>label {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .form-floating>.form-select option {
-            background-color: #000;
+        /* Google Btn */
+        .btn-google {
+            background: transparent;
+            border: 1px solid var(--border-rgba);
             color: #fff;
+            padding: 0.8rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            width: 100%;
+            transition: 0.3s;
         }
 
-        [data-theme="light"] .form-floating>.form-control,
-        [data-theme="light"] .form-floating>.form-select {
-            background-color: #f8f9fa !important;
-            border: 1px solid rgba(0, 0, 0, 0.1) !important;
-            color: #000 !important;
+        .btn-google:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
-        [data-theme="light"] .form-floating>label {
-            color: rgba(0, 0, 0, 0.5);
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
         }
 
-        [data-theme="light"] .form-floating>.form-select option {
-            background-color: #fff;
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Primary Btn */
+        .btn-register {
+            background: var(--primary-yellow);
             color: #000;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 1rem;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(252, 221, 9, 0.1);
         }
 
-        .btn-social {
-            transition: all 0.2s ease;
+        .btn-register:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 15px 25px rgba(252, 221, 9, 0.2);
+            background: #fde541;
         }
 
-        .btn-social:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        .login-text {
+            margin-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
         }
 
-        .back-link {
+        .login-text a {
+            color: var(--primary-yellow);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Password Wrapper */
+        .pass-wrapper {
+            position: relative;
+        }
+
+        .toggle-btn {
             position: absolute;
-            top: 30px;
-            left: 40px;
-            z-index: 100;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        select option {
+            background: #000;
+            color: #fff;
         }
     </style>
 </head>
@@ -173,145 +289,112 @@ $auth->register();
 <body>
     <div class="container-fluid p-0 split-layout">
         <div class="row g-0 h-100 min-vh-100">
-            <!-- Left Side: Image -->
+            <!-- Left Side: Visual -->
             <div class="col-lg-6 d-none d-lg-flex image-side">
-                <div class="quote-card fade-in-up">
-                    <h3 class="text-white mb-3" style="font-family: 'Playfair Display', serif; font-style: italic;">
-                        "Every dish tells a story of tradition, passion, and the warmth of Ethiopian hospitality."</h3>
-                    <div class="d-flex align-items-center gap-3">
-                        <div style="width: 40px; height: 1px; background: var(--primary-color);"></div>
-                        <span class="text-uppercase small letter-spacing-1 text-primary-gold fw-bold">Taste the
-                            Authenticity</span>
+                <div class="quote-container fade-in">
+                    <div class="quote-card">
+                        <div class="quote-text">
+                            "Every dish tells a story of tradition, passion, and the warmth of Ethiopian hospitality."
+                        </div>
+                        <div class="quote-sub">
+                            Authentic Experience
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Side: Form -->
+            <!-- Right Side: Interaction -->
             <div class="col-lg-6 form-side">
-                <a href="index.php" class="back-link text-decoration-none text-muted small hover-gold">
-                    <i class="fas fa-arrow-left me-2"></i>Back to Home
-                </a>
-
-                <!-- Language Selector -->
-                <div class="lang-selector dropdown">
-                    <a class="text-decoration-none dropdown-toggle d-flex align-items-center gap-2" href="#"
-                        role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-globe"></i> English (US)
+                <!-- Navigation -->
+                <div class="back-nav">
+                    <a href="index.php" class="nav-link">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Home
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end small shadow border-0"
-                        style="background: var(--card-bg); backdrop-filter: blur(10px);">
-                        <li><a class="dropdown-item text-white-50 hover-gold" href="#">🇺🇸 English</a></li>
-                        <li><a class="dropdown-item text-white-50 hover-gold" href="#">🇪🇹 Amharic</a></li>
-                        <li><a class="dropdown-item text-white-50 hover-gold" href="#">🇫🇷 French</a></li>
-                    </ul>
                 </div>
 
-                <div class="form-container fade-in-up">
-                    <div class="mb-5">
-                        <h2 class="fw-bold mb-2 display-6" style="font-family: 'Playfair Display', serif;">Create
-                            Account</h2>
-                        <p class="text-muted">Join us to reserve tables and order exclusive meals.</p>
+                <div class="form-container fade-in">
+                    <div class="mb-4">
+                        <h1 class="welcome-title">Join Us</h1>
+                        <p class="welcome-sub">Create an account to start your culinary journey.</p>
                     </div>
 
-                    <!-- Social Login -->
-                    <div class="d-grid gap-2 mb-4">
-                        <button type="button"
-                            class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 py-2 btn-social"
-                            style="border-color: rgba(255,255,255,0.15);">
-                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"
-                                style="width:20px;">
-                            <span class="fw-medium">Sign up with Google</span>
-                        </button>
-                    </div>
+                    <button class="btn btn-google">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20" alt="G">
+                        Sign up with Google
+                    </button>
 
-                    <div class="d-flex align-items-center mb-4">
-                        <hr class="flex-grow-1 border-secondary opacity-10 m-0">
-                        <span class="px-3 text-muted small text-uppercase" style="font-size: 0.75rem;">Or register with
-                            email</span>
-                        <hr class="flex-grow-1 border-secondary opacity-10 m-0">
-                    </div>
+                    <div class="or-divider">Or use email</div>
 
                     <!-- Alerts -->
                     <?php if (isset($_SESSION['flash']['register_error'])): ?>
-                        <div
-                            class="alert alert-danger py-2 border-0 bg-danger bg-opacity-10 text-danger small mb-4 rounded-2">
-                            <i class="fas fa-exclamation-circle me-1"></i> <?php echo flash('register_error')['message']; ?>
+                        <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border-0 py-2 small mb-4">
+                            <?php echo flash('register_error')['message']; ?>
                         </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="full_name" name="full_name" placeholder=" "
+                    <form method="POST">
+                        <div class="input-group-custom">
+                            <label class="input-label">Full Name</label>
+                            <input type="text" name="full_name" class="custom-input" placeholder="Enter your full name"
                                 required>
-                            <label for="full_name">Full Name</label>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" name="email" placeholder=" " required>
-                            <label for="email">Email Address</label>
+                        <div class="input-group-custom">
+                            <label class="input-label">Email Address</label>
+                            <input type="email" name="email" class="custom-input" placeholder="Enter your email"
+                                required>
                         </div>
 
-                        <div class="row g-2 mb-3">
+                        <div class="row g-3">
                             <div class="col-4">
-                                <div class="form-floating">
-                                    <select class="form-select" id="countryCode">
+                                <div class="input-group-custom">
+                                    <label class="input-label">Code</label>
+                                    <select class="custom-select" id="countryCode">
                                         <option value="+251">🇪🇹 +251</option>
                                         <option value="+1">🇺🇸 +1</option>
-                                        <option value="+44">🇬🇧 +44</option>
                                     </select>
-                                    <label for="countryCode">Code</label>
                                 </div>
                             </div>
                             <div class="col-8">
-                                <div class="form-floating">
-                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder=" "
-                                        required>
-                                    <label for="phone">Number</label>
+                                <div class="input-group-custom">
+                                    <label class="input-label">Phone Number</label>
+                                    <input type="tel" name="phone" class="custom-input" placeholder="912..." required>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="position-relative mb-4">
-                            <div class="form-floating">
-                                <input type="password" class="form-control" id="password" name="password"
-                                    placeholder=" " required>
-                                <label for="password">Create Password</label>
+                        <div class="input-group-custom">
+                            <label class="input-label">Create Password</label>
+                            <div class="pass-wrapper">
+                                <input type="password" id="password" name="password" class="custom-input"
+                                    placeholder="Create a strong password" required>
+                                <span class="toggle-btn" onclick="togglePass()">
+                                    <i class="fas fa-eye"></i>
+                                </span>
                             </div>
-                            <span
-                                class="password-toggle position-absolute top-50 end-0 translate-middle-y me-3 text-muted"
-                                onclick="togglePassword()">
-                                <i class="fas fa-eye"></i>
-                            </span>
                         </div>
 
-                        <button type="submit" class="btn btn-primary-gold w-100 py-3 rounded-3 fw-bold shadow-lg">
-                            Create Account
-                        </button>
+                        <button type="submit" class="btn btn-register">Create Account</button>
                     </form>
 
-                    <div class="text-center mt-4">
-                        <p class="text-muted small">Already have an account? <a href="login.php"
-                                class="text-primary-gold text-decoration-none fw-bold hover-gold">Log in</a></p>
-                    </div>
+                    <p class="login-text">
+                        Already have an account? <a href="login.php">Log in</a>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Theme Script & Password Toggle -->
     <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const icon = document.querySelector('.password-toggle i');
-
-if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+        function togglePass() {
+            const p = document.getElementById('password');
+            const i = document.querySelector('.toggle-btn i');
+            if (p.type === 'password') {
+                p.type = 'text';
+                i.className = 'fas fa-eye-slash';
             } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                p.type = 'password';
+                i.className = 'fas fa-eye';
             }
         }
     </script>

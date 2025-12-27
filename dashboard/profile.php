@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         flash('error', 'Failed to update profile.');
     }
-    redirect('profile.php');
+    redirect('dashboard/profile.php');
 }
 ?>
 <!DOCTYPE html>
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include 'partials/sidebar.php'; ?>
 
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-end mb-4 text-white fade-in-up">
+        <div class="d-flex justify-content-between align-items-end mb-4 text-white fade-in-up dashboard-header">
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
@@ -99,56 +99,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <div class="row fade-in-up" style="animation-delay: 0.2s;">
+        <div class="row fade-in-up" style="animation-delay: 0.1s;">
             <div class="col-lg-8">
-                <div class="table-card p-5">
+                <div class="stat-card detail-card p-5 h-100">
                     <form method="POST">
                         <div class="row g-4">
-                            <div class="col-12 d-flex align-items-center mb-4">
-                                <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center fw-bold text-dark fs-1 me-4"
-                                    style="width: 100px; height: 100px;">
+                            <div class="col-12 d-flex align-items-center mb-5">
+                                <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center fw-bold text-dark fs-1 me-4 shadow"
+                                    style="width: 120px; height: 120px; font-family: 'Playfair Display', serif;">
                                     <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
                                 </div>
                                 <div>
-                                    <h4 class="text-white mb-1"><?php echo htmlspecialchars($user['full_name']); ?></h4>
-                                    <p class="text-muted mb-0 text-uppercase letter-spacing-1">
+                                    <h2 class="text-white mb-1" style="font-size: 2.5rem;">
+                                        <?php echo htmlspecialchars($user['full_name']); ?>
+                                    </h2>
+                                    <span
+                                        class="badge bg-primary-gold text-dark rounded-pill px-3 py-2 text-uppercase letter-spacing-1">
                                         <?php echo $user['role']; ?>
-                                    </p>
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label text-muted">Full Name</label>
-                                <input type="text" name="full_name"
-                                    class="form-control bg-dark border-secondary text-white p-3"
-                                    value="<?php echo htmlspecialchars($user['full_name']); ?>" required>
+                                <label
+                                    class="form-label text-white-50 small text-uppercase fw-bold letter-spacing-1">Full
+                                    Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" name="full_name" class="form-control"
+                                        value="<?php echo htmlspecialchars($user['full_name']); ?>" required>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label text-muted">Email Address</label>
-                                <input type="email" class="form-control bg-dark border-secondary text-muted p-3"
-                                    value="<?php echo htmlspecialchars($user['email']); ?>" disabled
-                                    title="Email cannot be changed">
+                                <label
+                                    class="form-label text-white-50 small text-uppercase fw-bold letter-spacing-1">Email
+                                    Address</label>
+                                <div class="input-group opacity-50 shadow-none">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control"
+                                        value="<?php echo htmlspecialchars($user['email']); ?>" disabled
+                                        style="cursor: not-allowed;">
+                                </div>
+                                <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i> Email
+                                    cannot be changed</small>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label text-muted">Phone Number</label>
-                                <input type="tel" name="phone"
-                                    class="form-control bg-dark border-secondary text-white p-3"
-                                    value="<?php echo htmlspecialchars($user['phone']); ?>">
+                                <label
+                                    class="form-label text-white-50 small text-uppercase fw-bold letter-spacing-1">Phone
+                                    Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="tel" name="phone" class="form-control"
+                                        value="<?php echo htmlspecialchars($user['phone']); ?>" placeholder="+251...">
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label text-muted">New Password (Optional)</label>
-                                <input type="password" name="password"
-                                    class="form-control bg-dark border-secondary text-white p-3"
-                                    placeholder="Leave blank to keep current">
+                                <label
+                                    class="form-label text-white-50 small text-uppercase fw-bold letter-spacing-1">Update
+                                    Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" name="password" class="form-control"
+                                        placeholder="Enter new password">
+                                </div>
+                                <small class="text-muted mt-1 d-block">Leave blank to keep current password</small>
                             </div>
 
                             <div class="col-12 mt-5">
                                 <button type="submit"
-                                    class="btn btn-primary-gold rounded-pill px-5 py-3 fw-bold shadow-sm">
-                                    <i class="fas fa-save me-2"></i> Save Changes
+                                    class="btn btn-primary-gold btn-lg rounded-pill px-5 fw-bold shadow">
+                                    <i class="fas fa-save me-2"></i> Save Profile Changes
                                 </button>
                             </div>
                         </div>
@@ -157,20 +180,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="col-lg-4">
-                <div class="stat-card flex-column align-items-start p-4 mb-4">
-                    <h5 class="text-white mb-3">Account Status</h5>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-check-circle text-success me-2"></i>
-                        <span class="text-white-50">Email Verified</span>
+                <div class="stat-card detail-card p-4">
+                    <h5 class="text-white mb-4 border-bottom border-secondary pb-3"
+                        style="font-family: 'Playfair Display', serif;">Member Details</h5>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="stat-icon me-3">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block text-uppercase letter-spacing-1"
+                                style="font-size: 0.65rem;">Since</small>
+                            <span
+                                class="text-white fw-medium"><?php echo date('F d, Y', strtotime($user['created_at'])); ?></span>
+                        </div>
                     </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-shield-alt text-primary-gold me-2"></i>
-                        <span class="text-white-50">Role: <?php echo ucfirst($user['role']); ?></span>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="stat-icon me-3 bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-shield-check"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block text-uppercase letter-spacing-1"
+                                style="font-size: 0.65rem;">Account Status</small>
+                            <span class="text-white fw-medium">Active & Verified</span>
+                        </div>
                     </div>
+
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-clock text-info me-2"></i>
-                        <span class="text-white-50">Joined:
-                            <?php echo date('M Y', strtotime($user['created_at'])); ?></span>
+                        <div class="stat-icon me-3 bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-user-tag"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block text-uppercase letter-spacing-1"
+                                style="font-size: 0.65rem;">Access Level</small>
+                            <span class="text-white fw-medium"><?php echo ucfirst($user['role']); ?> Access</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-top border-secondary text-center">
+                        <p class="text-muted small">Need help with your account?</p>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-pill px-4">Contact Support</a>
                     </div>
                 </div>
             </div>

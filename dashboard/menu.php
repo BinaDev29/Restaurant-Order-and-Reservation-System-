@@ -35,9 +35,14 @@ $categories = $controller->getCategories();
     <?php include 'partials/sidebar.php'; ?>
 
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4 text-white">
-            <h2>Menu Management</h2>
-            <button class="btn btn-primary-gold" data-bs-toggle="modal" data-bs-target="#addModal">
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3 dashboard-header">
+            <div>
+                <h6 class="text-primary-gold text-uppercase letter-spacing-2 mb-1">Kitchen</h6>
+                <h2 class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">Menu Management</h2>
+            </div>
+            <button class="btn btn-primary-gold rounded-pill px-4 fw-bold shadow-sm" data-bs-toggle="modal"
+                data-bs-target="#addModal">
                 <i class="fas fa-plus me-2"></i> Add New Item
             </button>
         </div>
@@ -48,8 +53,8 @@ $categories = $controller->getCategories();
             </div>
         <?php endif; ?>
 
-        <div class="card bg-dark border-secondary">
-            <div class="card-body p-0">
+        <div class="table-card fade-in-up shadow" style="animation-delay: 0.1s;">
+            <div class="p-0">
                 <div class="table-responsive">
                     <table class="table table-dark table-hover mb-0 align-middle">
                         <thead>
@@ -75,7 +80,8 @@ $categories = $controller->getCategories();
                                     </td>
                                     <td class="text-primary-gold"><?php echo format_price($item['price']); ?></td>
                                     <td class="small text-muted text-truncate" style="max-width: 200px;">
-                                        <?php echo htmlspecialchars($item['description']); ?></td>
+                                        <?php echo htmlspecialchars($item['description']); ?>
+                                    </td>
                                     <td>
                                         <form method="POST" onsubmit="return confirm('Delete this item?');"
                                             style="display:inline;">

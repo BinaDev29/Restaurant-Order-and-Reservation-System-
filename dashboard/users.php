@@ -39,7 +39,7 @@ $users = $controller->index($search);
 
     <div class="main-content">
         <div
-            class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3">
+            class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3 dashboard-header">
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
@@ -117,12 +117,19 @@ $users = $controller->index($search);
                                     </div>
                                 </td>
                                 <td>
-                                    <?php if ($u['role'] === 'admin'): ?>
-                                        <span class="badge bg-primary-gold text-dark rounded-pill px-3">Admin</span>
-                                    <?php else: ?>
-                                        <span
-                                            class="badge bg-secondary bg-opacity-50 text-white rounded-pill px-3">Customer</span>
-                                    <?php endif; ?>
+                                    <?php
+                                    $badges = [
+                                        'admin' => 'bg-primary-gold text-dark',
+                                        'chef' => 'bg-danger text-white',
+                                        'waiter' => 'bg-info text-dark',
+                                        'staff' => 'bg-warning text-dark',
+                                        'customer' => 'bg-secondary bg-opacity-50 text-white'
+                                    ];
+                                    $badgeClass = $badges[$u['role']] ?? 'bg-secondary text-white';
+                                    ?>
+                                    <span class="badge <?php echo $badgeClass; ?> rounded-pill px-3">
+                                        <?php echo ucfirst($u['role']); ?>
+                                    </span>
                                 </td>
                                 <td class="text-white-50">
                                     <?php echo $u['phone'] ? htmlspecialchars($u['phone']) : '<span class="text-muted opacity-50">-</span>'; ?>

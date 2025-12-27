@@ -38,7 +38,7 @@ $user = current_user();
 
     <div class="main-content">
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-end mb-5 text-white fade-in-up">
+        <div class="d-flex justify-content-between align-items-end mb-5 text-white fade-in-up dashboard-header">
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
@@ -79,19 +79,19 @@ $user = current_user();
             <?php if ($user['role'] === 'admin'): ?>
                 <!-- Admin Stats -->
                 <div class="col-md-3">
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-summary">
                         <div>
                             <h6 class="text-primary-gold">Total Revenue</h6>
                             <h3 class="text-white"><?php echo format_price($stats['revenue']); ?></h3>
                             <small class="text-muted" style="font-size: 0.75rem;">Lifetime Earnings</small>
                         </div>
                         <div class="stat-icon bg-success text-success bg-opacity-10">
-                            <i class="fas fa-dollar-sign"></i>
+                            <i class="fas fa-coins"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-summary">
                         <div>
                             <h6 class="text-primary-gold">Pending Orders</h6>
                             <h3 class="text-white"><?php echo $stats['pending_orders']; ?></h3>
@@ -103,7 +103,7 @@ $user = current_user();
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-summary">
                         <div>
                             <h6 class="text-primary-gold">Today's Visits</h6>
                             <h3 class="text-white"><?php echo $stats['reservations_today']; ?></h3>
@@ -115,7 +115,7 @@ $user = current_user();
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-summary">
                         <div>
                             <h6 class="text-primary-gold">Active Menu</h6>
                             <h3 class="text-white"><?php echo $stats['active_items']; ?></h3>
@@ -127,48 +127,109 @@ $user = current_user();
                     </div>
                 </div>
             </div>
-        <?php elseif ($user['role'] === 'staff'): ?>
-            <!-- Staff Stats -->
-            <div class="col-md-4">
-                <div class="stat-card">
-                    <div>
-                        <h6 class="text-primary-gold">Active Orders</h6>
-                        <h3 class="text-white"><?php echo $stats['active_orders_count']; ?></h3>
-                        <small class="text-muted" style="font-size: 0.75rem;">To Prepare/Serve</small>
-                    </div>
-                    <div class="stat-icon bg-warning text-warning bg-opacity-10">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-card">
-                    <div>
-                        <h6 class="text-primary-gold">Today's Reservations</h6>
-                        <h3 class="text-white"><?php echo $stats['reservations_today']; ?></h3>
-                        <small class="text-muted" style="font-size: 0.75rem;">Expected Guests</small>
-                    </div>
-                    <div class="stat-icon bg-info text-info bg-opacity-10">
-                        <i class="fas fa-calendar-day"></i>
+        <?php elseif ($user['role'] === 'staff' || $user['role'] === 'chef' || $user['role'] === 'waiter'): ?>
+            <!-- Staff/Chef/Waiter Stats -->
+
+            <?php if ($user['role'] === 'chef'): ?>
+                <!-- CHEF VIEW -->
+                <div class="col-md-4">
+                    <div class="stat-card stat-card-summary">
+                        <div>
+                            <h6 class="text-primary-gold">Pending Orders</h6>
+                            <h3 class="text-white" id="stat-pending"><?php echo $stats['pending_orders']; ?></h3>
+                            <small class="text-muted" style="font-size: 0.75rem;">New Requests</small>
+                        </div>
+                        <div class="stat-icon bg-danger text-danger bg-opacity-10">
+                            <i class="fas fa-fire"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-card">
-                    <div>
-                        <h6 class="text-primary-gold">Occupied Tables</h6>
-                        <h3 class="text-white"><?php echo $stats['occupied_tables']; ?></h3>
-                        <small class="text-muted" style="font-size: 0.75rem;">Currently Seated</small>
-                    </div>
-                    <div class="stat-icon bg-success text-success bg-opacity-10">
-                        <i class="fas fa-chair"></i>
+                <div class="col-md-4">
+                    <div class="stat-card stat-card-summary">
+                        <div>
+                            <h6 class="text-primary-gold">Cooking Now</h6>
+                            <h3 class="text-white" id="stat-active"><?php echo $stats['active_orders_count']; ?></h3>
+                            <small class="text-muted" style="font-size: 0.75rem;">In Preparation</small>
+                        </div>
+                        <div class="stat-icon bg-warning text-warning bg-opacity-10">
+                            <i class="fas fa-utensils"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php else: ?>
+                <!-- Chef needs to see Menu Status too -->
+                <div class="col-md-4">
+                    <div class="stat-card stat-card-summary">
+                        <div>
+                            <h6 class="text-primary-gold">Active Items</h6>
+                            <h3 class="text-white"><?php echo $stats['active_items']; ?></h3>
+                            <small class="text-muted" style="font-size: 0.75rem;">On Menu</small>
+                        </div>
+                        <div class="stat-icon bg-primary text-primary bg-opacity-10">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                    </div>
+                </div>
+
+            <?php elseif ($user['role'] === 'waiter'): ?>
+                <!-- WAITER VIEW -->
+                <div class="col-md-4">
+                    <div class="stat-card stat-card-summary">
+                        <div>
+                            <h6 class="text-primary-gold">Ready to Serve</h6>
+                            <h3 class="text-white" id="stat-ready">0</h3>
+                            <!-- Will be populated by JS or Controller if added -->
+                            <small class="text-muted" style="font-size: 0.75rem;">Kitchen Ready</small>
+                        </div>
+                        <div class="stat-icon bg-success text-success bg-opacity-10">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card stat-card-summary">
+                        <div>
+                            <h6 class="text-primary-gold">Occupied Tables</h6>
+                            <h3 class="text-white"><?php echo $stats['occupied_tables']; ?></h3>
+                            <small class="text-muted" style="font-size: 0.75rem;">Currently Seated</small>
+                        </div>
+                        <div class="stat-icon bg-info text-info bg-opacity-10">
+                            <i class="fas fa-chair"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card stat-card-summary">
+                        <div>
+                            <h6 class="text-primary-gold">Guests Today</h6>
+                            <h3 class="text-white"><?php echo $stats['reservations_today']; ?></h3>
+                            <small class="text-muted" style="font-size: 0.75rem;">Confirmed</small>
+                        </div>
+                        <div class="stat-icon bg-primary text-primary bg-opacity-10">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+
+            <?php else: ?>
+                <!-- Generic Staff View (Fallback) -->
+                <div class="col-md-4">
+                    <div class="stat-card stat-card-summary">
+                        <div>
+                            <h6 class="text-primary-gold">Active Orders</h6>
+                            <h3 class="text-white"><?php echo $stats['active_orders_count']; ?></h3>
+                            <small class="text-muted" style="font-size: 0.75rem;">Total Active</small>
+                        </div>
+                        <div class="stat-icon bg-warning text-warning bg-opacity-10">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
             <!-- Customer Stats -->
             <div class="col-md-4">
-                <div class="stat-card">
+                <div class="stat-card stat-card-summary">
                     <div>
                         <h6 class="text-primary-gold">Active Orders</h6>
                         <h3 class="text-white"><?php echo $stats['active_orders']; ?></h3>
@@ -180,7 +241,7 @@ $user = current_user();
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card">
+                <div class="stat-card stat-card-summary">
                     <div>
                         <h6 class="text-primary-gold">Reservations</h6>
                         <h3 class="text-white"><?php echo $stats['upcoming_reservations']; ?></h3>
@@ -192,7 +253,7 @@ $user = current_user();
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card">
+                <div class="stat-card stat-card-summary">
                     <div>
                         <h6 class="text-primary-gold">Total Spent</h6>
                         <h3 class="text-white"><?php echo format_price($stats['total_spent']); ?></h3>
@@ -253,9 +314,9 @@ $user = current_user();
                                 $statusClass = match ($order['order_status']) {
                                     'pending' => 'bg-warning text-dark',
                                     'confirmed', 'preparing' => 'bg-info text-dark',
-                                    'ready' => 'bg-primary text-white',
-                                    'completed' => 'bg-success text-white',
-                                    'cancelled' => 'bg-danger text-white',
+                                    'ready' => 'bg-primary pulse-green text-white',
+                                    'completed' => 'bg-eth-green text-white',
+                                    'cancelled' => 'bg-eth-red text-white',
                                     default => 'bg-secondary text-white'
                                 };
                                 ?>
@@ -293,6 +354,29 @@ $user = current_user();
         document.getElementById('sidebarToggle').addEventListener('click', function () {
             document.querySelector('.sidebar').classList.toggle('show');
         });
+
+        // Real-time Polling for Order Updates
+        function checkUpdates() {
+            fetch('../app/api/heartbeat.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) return;
+
+                    // Update UI elements if they exist
+                    const pendingEl = document.getElementById('stat-pending');
+                    const activeEl = document.getElementById('stat-active');
+                    const readyEl = document.getElementById('stat-ready');
+
+                    if (pendingEl) pendingEl.innerText = data.pending_orders;
+                    if (activeEl) activeEl.innerText = data.active_orders;
+                    if (readyEl) readyEl.innerText = data.ready_orders;
+                    // Simple simulated notification sound/alert could go here
+                })
+                .catch(console.error);
+        }
+
+        // Poll every 10 seconds
+        setInterval(checkUpdates, 10000);
     </script>
 </body>
 

@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user['role'] === 'admin') {
             flash('success', 'Reservation marked as completed.');
         }
     }
-    redirect('reservations.php');
+    redirect('dashboard/reservations.php');
 }
 
 $search = sanitize_input($_GET['search'] ?? '');
@@ -59,7 +59,7 @@ $reservations = $controller->index($search);
 
     <div class="main-content">
         <!-- Header -->
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3 dashboard-header">
             <div class="d-flex align-items-center">
                  <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
@@ -160,8 +160,8 @@ $reservations = $controller->index($search);
                                      <?php 
                                     $statusClass = match ($res['status']) {
                                         'pending' => 'bg-warning text-dark',
-                                        'confirmed' => 'bg-success text-white',
-                                        'cancelled' => 'bg-danger text-white',
+                                        'confirmed' => 'bg-eth-green pulse-green text-white',
+                                        'cancelled' => 'bg-eth-red text-white',
                                         'completed' => 'bg-info text-dark',
                                         default => 'bg-secondary text-white'
                                     };

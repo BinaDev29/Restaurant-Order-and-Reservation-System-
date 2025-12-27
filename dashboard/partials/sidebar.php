@@ -3,10 +3,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 $user = current_user();
 ?>
 <div class="sidebar d-flex flex-column">
-    <div class="px-4 mb-4">
+    <div class="sidebar-brand">
         <!-- Brand -->
         <a href="../index.php" class="text-decoration-none">
-            <h4 class="text-primary-gold mt-2"><i class="fas fa-utensils me-2"></i>Lumina</h4>
+            <h4 class="text-primary-gold mt-2"><i class="fas fa-utensils me-2"></i>Golden Bar</h4>
         </a>
     </div>
 

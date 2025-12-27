@@ -51,7 +51,7 @@ function require_admin()
 
 function format_price($amount)
 {
-    return '$' . number_format($amount, 2);
+    return 'ETB ' . number_format($amount, 2);
 }
 
 function flash($name, $message = '', $class = 'success')

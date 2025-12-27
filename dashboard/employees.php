@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-    redirect('employees.php');
+    redirect('dashboard/employees.php');
 }
 
 $search = sanitize_input($_GET['search'] ?? '');
@@ -73,7 +73,7 @@ $employees = $controller->getEmployees($search);
 
     <div class="main-content">
         <div
-            class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3">
+            class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3 dashboard-header">
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
@@ -141,7 +141,7 @@ $employees = $controller->getEmployees($search);
         <div class="row g-4 fade-in-up" style="animation-delay: 0.2s;">
             <?php foreach ($employees as $emp): ?>
                 <div class="col-md-6 col-lg-4">
-                    <div class="stat-card p-4 h-100 position-relative">
+                    <div class="stat-card detail-card position-relative">
                         <!-- Status Badge -->
                         <span class="position-absolute top-0 end-0 m-4 badge rounded-pill 
                             <?php echo ($emp['emp_status'] ?? 'active') === 'active' ? 'bg-success' : 'bg-secondary'; ?> 
@@ -172,7 +172,8 @@ $employees = $controller->getEmployees($search);
                                 </div>
                                 <div class="col-6 border-start border-secondary ps-3">
                                     <small class="text-muted d-block">Salary</small>
-                                    <div class="text-white fw-medium">$<?php echo number_format($emp['salary'] ?? 0, 2); ?>
+                                    <div class="text-white fw-medium">ETB
+                                        <?php echo number_format($emp['salary'] ?? 0, 2); ?>
                                     </div>
                                     <small class="text-muted d-block mt-2">Hire Date</small>
                                     <div class="text-white-50 small">
@@ -199,7 +200,7 @@ $employees = $controller->getEmployees($search);
             <!-- Add New Card -->
             <div class="col-md-6 col-lg-4" data-bs-toggle="modal" data-bs-target="#addEmployeeModal"
                 style="cursor: pointer;">
-                <div class="stat-card flex-column align-items-center justify-content-center text-center p-4 border-dashed h-100"
+                <div class="stat-card detail-card align-items-center justify-content-center text-center p-4 h-100"
                     style="border-style: dashed !important; border-color: rgba(255,255,255,0.1); min-height: 280px;">
                     <div class="bg-secondary bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center text-white-50 fs-3 mb-3"
                         style="width: 60px; height: 60px;">
@@ -251,7 +252,7 @@ $employees = $controller->getEmployees($search);
 
                             <!-- Job Details -->
                             <div class="col-md-6">
-                                <label class="form-label text-muted">Monthly Salary ($)</label>
+                                <label class="form-label text-muted">Monthly Salary (ETB)</label>
                                 <input type="number" step="0.01" name="salary"
                                     class="form-control bg-black text-white border-secondary" required
                                     placeholder="0.00">

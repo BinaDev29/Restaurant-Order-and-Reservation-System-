@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flash('success', 'Table status updated');
         }
     }
-    redirect('tables.php');
+    redirect('dashboard/tables.php');
 }
 
 $tables = $controller->index();
@@ -58,7 +58,7 @@ $tables = $controller->index();
 
     <div class="main-content">
         <div
-            class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3">
+            class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 text-white fade-in-up gap-3 dashboard-header">
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
                     <i class="fas fa-bars"></i>

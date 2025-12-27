@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Configuration Constants
-define('APP_NAME', 'Lumina Dining');
+define('APP_NAME', 'Golden Bar and Restaurant');
 define('APP_URL', 'http://localhost:8000'); // Set for php -S localhost:8000
 define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'restaurant_db');

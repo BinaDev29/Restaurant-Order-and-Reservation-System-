@@ -89,16 +89,16 @@ $orders = $controller->index();
                                     <?php endif; ?>
                                     <td><?php echo format_price($order['total_amount']); ?></td>
                                     <td>
-                                        <span class="badge bg-<?php
+                                        <span class="badge <?php
                                         echo match ($order['order_status']) {
-                                            'pending' => 'warning',
-                                            'completed' => 'success',
-                                            'cancelled' => 'danger',
-                                            'preparing' => 'info',
-                                            'ready' => 'primary',
-                                            default => 'secondary'
+                                            'pending' => 'bg-warning text-dark',
+                                            'completed' => 'bg-eth-green text-white',
+                                            'cancelled' => 'bg-eth-red text-white',
+                                            'preparing' => 'bg-info text-dark',
+                                            'ready' => 'bg-primary pulse-green text-white',
+                                            default => 'bg-secondary text-white'
                                         };
-                                        ?>">
+                                        ?> rounded-pill px-3 py-2 fw-normal">
                                             <?php echo ucfirst($order['order_status']); ?>
                                         </span>
                                     </td>
