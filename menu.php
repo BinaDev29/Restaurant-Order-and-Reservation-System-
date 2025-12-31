@@ -9,9 +9,10 @@ $items = $menuModel->getAllItems();
 // Group by category
 $menuItems = [];
 foreach ($items as $item) {
-    echo "<!-- Debug: Item " . $item['name'] . " Cat: " . $item['category_name'] . " -->";
     $menuItems[$item['category_name']][] = $item;
 }
+
+$user = is_logged_in() ? current_user() : null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,125 +20,268 @@ foreach ($items as $item) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full Menu | <?php echo APP_NAME; ?></title>
+    <title>Menu | <?php echo APP_NAME; ?></title>
     <!-- Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
         rel="stylesheet">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        :root {
+            --primary-gold: #FCDD09;
+            --secondary-gold: #d4af37;
+            --dark-bg: #080808;
+            --glass-bg: rgba(20, 20, 20, 0.85);
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-rgba: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            background-image: radial-gradient(circle at top right, rgba(252, 221, 9, 0.05), transparent 400px);
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-rgba);
+            padding: 1.2rem 0;
+            z-index: 1000;
+        }
+
+        .hero-mini {
+            height: 40vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .category-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .category-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(252, 221, 9, 0.3), transparent);
+        }
+
+        .food-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-rgba);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            height: 100%;
+            position: relative;
+        }
+
+        .food-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .food-card img {
+            height: 240px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .food-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .item-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+        }
+
+        .btn-add-cart {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-rgba);
+            color: #fff;
+            padding: 12px;
+            border-radius: 14px;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-add-cart:hover {
+            background: var(--primary-gold);
+            color: #000;
+            border-color: var(--primary-gold);
+            transform: scale(1.02);
+        }
+
+        /* Cart Drawer */
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: #0a0a0a;
+            border-left: 1px solid var(--border-rgba);
+            z-index: 1060;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .cart-drawer.open {
+            right: 0;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1055;
+            display: none;
+        }
+
+        .cart-item-ui {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .cart-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-rgba);
+            padding-top: 2rem;
+        }
+
+        #cart-count {
+            background: var(--primary-gold);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+    </style>
 </head>
 
-<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="100">
+<body>
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand text-primary-gold" href="index.php">
-                <i class="fas fa-utensils me-2"></i><?php echo APP_NAME; ?>
+            <a class="navbar-brand text-primary-gold fw-bold" href="index.php">
+                <i class="fas fa-utensils me-2"></i> LUMINA
             </a>
-            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link text-white" href="index.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-white active" href="menu.php">Menu</a></li>
 
-                    <li class="nav-item ms-2">
-                        <button class="btn btn-outline-warning position-relative" id="checkout-btn">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                id="cart-count">
-                                0
-                            </span>
-                        </button>
-                    </li>
-                    <li class="nav-item ms-2">
-                        <button class="btn btn-outline-light rounded-circle" id="theme-toggle" title="Toggle Theme">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
-                </ul>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-outline-warning position-relative border-0 fs-5" id="open-cart">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle"
+                        id="cart-count">0</span>
+                </button>
+
+                <?php if ($user): ?>
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                            data-bs-toggle="dropdown">
+                            <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center text-dark fw-bold me-1"
+                                style="width: 35px; height: 35px;">
+                                <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary p-2">
+                            <li><a class="dropdown-item rounded-2" href="dashboard/index.php">Dashboard</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger rounded-2" href="logout.php">Sign Out</a></li>
+                        </ul>
+                    </div>
+                <?php else: ?>
+                    <a href="login.php" class="btn btn-primary-gold rounded-pill px-4 btn-sm">Sign In</a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
 
-    <!-- Header -->
-    <section class="hero-section" style="height: 50vh;">
-        <div class="hero-content text-center">
-            <h1 class="display-3 text-primary-gold">Full Menu</h1>
-            <p class="lead text-white">Explore our complete culinary collection</p>
+    <!-- Hero -->
+    <section class="hero-mini">
+        <div class="container">
+            <h1 class="display-3 fw-bold animate__animated animate__fadeInDown text-white">Culinary Collection</h1>
+            <p class="lead text-white-50 animate__animated animate__fadeInUp">Discover Authentic Flavors & Premium
+                Dining</p>
         </div>
     </section>
 
-    <!-- Menu Section -->
-    <section class="section-padding menu-section-bg">
-        <div class="container">
-            <?php if (empty($menuItems)): ?>
-                <div class="text-center py-5">
-                    <i class="fas fa-utensils fa-3x text-muted mb-3 opacity-50"></i>
-                    <h4 class="text-white">Menu Unavailable</h4>
-                    <p class="text-muted">No items found. Please check back later.</p>
-                </div>
-            <?php else: ?>
-                <?php foreach ($menuItems as $category => $categoryItems): ?>
-                    <div class="mb-5">
-                        <h3
-                            class="text-primary-gold border-bottom border-warning border-opacity-25 pb-2 mb-4 d-inline-block pe-5 Playfair">
-                            <?php echo $category; ?></h3>
-                        <div class="row g-4">
-                            <?php foreach ($categoryItems as $item): ?>
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="card food-card h-100 border-0 overflow-hidden shadow-lg">
-                                        <div class="position-relative overflow-hidden">
-                                            <img src="<?php echo get_image_url($item['image']); ?>" class="card-img-top w-100"
-                                                alt="<?php echo $item['name']; ?>">
-                                            <div
-                                                class="position-absolute top-0 end-0 m-3 badge bg-warning text-dark shadow-sm fw-bold rounded-pill">
-                                                <i class="fas fa-certificate me-1"></i> Authentic
-                                            </div>
-                                        </div>
-                                        <div class="card-body d-flex flex-column p-4">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h5 class="card-title fw-bold text-white mb-0"><?php echo $item['name']; ?></h5>
-                                                <span
-                                                    class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill fs-6 item-price"><?php echo format_price($item['price']); ?></span>
-                                            </div>
-                                            <p class="card-text text-muted mb-4 flex-grow-1 small" style="line-height: 1.6;">
-                                                <?php echo $item['description']; ?></p>
-                                            <button class="btn btn-outline-warning w-100 fw-bold rounded-pill add-to-cart-btn"
-                                                data-id="<?php echo $item['id']; ?>">
-                                                <i class="fas fa-cart-plus me-2"></i> Add to Order
-                                            </button>
-                                        </div>
+    <!-- Main Content -->
+    <div class="container pb-5">
+        <?php foreach ($menuItems as $category => $items): ?>
+            <div class="mb-5">
+                <h2 class="category-title text-white"><?php echo $category; ?></h2>
+                <div class="row g-4">
+                    <?php foreach ($items as $item): ?>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="card food-card">
+                                <img src="<?php echo get_image_url($item['image']); ?>" class="card-img-top"
+                                    alt="<?php echo $item['name']; ?>">
+                                <div class="card-body p-4">
+                                    <h5 class="fw-bold mb-1 text-white"><?php echo $item['name']; ?></h5>
+                                    <p class="text-white-50 small mb-4" style="height: 40px; overflow: hidden;">
+                                        <?php echo $item['description']; ?></p>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="item-price"><?php echo format_price($item['price']); ?></span>
+                                        <button class="btn btn-add-cart add-to-cart-btn" data-id="<?php echo $item['id']; ?>"
+                                            data-name="<?php echo $item['name']; ?>" data-price="<?php echo $item['price']; ?>">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
+                            </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-    </section>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
-    <footer class="text-center py-5 border-top border-secondary menu-section-bg">
-        <div class="container">
-            <h2 class="text-primary-gold mb-4" style="font-family: 'Playfair Display', serif;"><?php echo APP_NAME; ?>
-            </h2>
-            <p class="text-muted small mb-0">&copy; <?php echo date('Y'); ?> <?php echo APP_NAME; ?>. Constructed by
-                Ethco Coders.</p>
-        </div>
-    </footer>
+    <!-- Footer / Cart Include -->
+    <?php include 'app/partials/cart_drawer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/theme.js"></script>
 </body>
 
 </html>

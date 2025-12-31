@@ -3,7 +3,7 @@ require_once 'app/config.php';
 require_once 'app/controllers/AuthController.php';
 
 $auth = new AuthController();
-$auth->login(); // Handles POST request
+$auth->login();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,391 +14,348 @@ $auth->login(); // Handles POST request
     <title>Login | <?php echo APP_NAME; ?></title>
     <!-- Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
         rel="stylesheet">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --primary-yellow: #FCDD09;
-            --darkER-bg: #0d0d0d;
-            --input-bg: #151515;
-            --border-rgba: rgba(255, 255, 255, 0.08);
+            --primary-gold: #FCDD09;
+            --secondary-gold: #d4af37;
+            --eth-green: #078930;
+            --eth-red: #DA121A;
+            --dark-bg: #080808;
+            --glass-bg: rgba(15, 15, 15, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         body {
-            overflow-x: hidden;
-            background-color: var(--darkER-bg);
+            background-color: var(--dark-bg);
             font-family: 'Outfit', sans-serif;
             color: #fff;
-        }
-
-        .split-layout {
             min-height: 100vh;
-        }
-
-        .image-side {
-            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
-            position: relative;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 5rem 4rem;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(252, 221, 9, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
         }
 
-        .quote-container {
-            max-width: 550px;
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 0;
+        }
+
+        .login-wrapper {
+            position: relative;
             z-index: 2;
-        }
-
-        .quote-card {
-            background: rgba(15, 15, 15, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-rgba);
-            padding: 2.5rem;
-            border-radius: 20px;
-            position: relative;
-            border-left: 5px solid var(--primary-yellow);
-        }
-
-        .quote-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            line-height: 1.3;
-            margin-bottom: 1.5rem;
-            font-style: italic;
-        }
-
-        .quote-sub {
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .quote-sub::before {
-            content: '';
-            width: 40px;
-            height: 2px;
-            background: var(--primary-yellow);
-        }
-
-        .form-side {
-            background-color: var(--darkER-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem;
-            position: relative;
-        }
-
-        .form-container {
             width: 100%;
-            max-width: 440px;
+            max-width: 1000px;
+            padding: 20px;
+            animation: fadeInScale 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* Nav Elements */
-        .back-nav {
-            position: absolute;
-            top: 40px;
-            left: 50px;
-        }
-
-        .lang-nav {
-            position: absolute;
-            top: 40px;
-            right: 50px;
-        }
-
-        .nav-link {
-            color: #fff;
-            opacity: 0.7;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        .nav-link:hover {
-            opacity: 1;
-            color: var(--primary-yellow);
-        }
-
-        /* Heading */
-        .welcome-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-sub {
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 3rem;
-        }
-
-        /* Inputs */
-        .input-group-custom {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 500;
-        }
-
-        .custom-input {
-            background: var(--input-bg) !important;
-            border: 1px solid var(--border-rgba) !important;
-            border-radius: 12px !important;
-            padding: 1rem 1.2rem !important;
-            color: #fff !important;
-            width: 100%;
-            transition: 0.3s;
-        }
-
-        .custom-input:focus {
-            border-color: var(--primary-yellow) !important;
-            box-shadow: 0 0 0 2px rgba(252, 221, 9, 0.1) !important;
-            outline: none;
-        }
-
-        /* Google Btn */
-        .btn-google {
-            background: transparent;
-            border: 1px solid var(--border-rgba);
-            color: #fff;
-            padding: 0.8rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            width: 100%;
-            transition: 0.3s;
-        }
-
-        .btn-google:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .or-divider {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 2rem;
-        }
-
-        .or-divider::before,
-        .or-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Primary Btn */
-        .btn-login {
-            background: var(--primary-yellow);
-            color: #000;
-            border: none;
-            padding: 1.1rem;
-            border-radius: 12px;
-            font-weight: 700;
-            width: 100%;
-            margin-top: 1rem;
-            transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(252, 221, 9, 0.15);
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px rgba(252, 221, 9, 0.25);
-            background: #fde541;
-        }
-
-        /* Links */
-        .forgot-link {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: 0.3s;
-        }
-
-        .forgot-link:hover {
-            color: #fff;
-        }
-
-        .signup-text {
-            margin-top: 2.5rem;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
-        }
-
-        .signup-text a {
-            color: var(--primary-yellow);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* Password Wrapper */
-        .pass-wrapper {
-            position: relative;
-        }
-
-        .toggle-btn {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        @keyframes fadeIn {
+        @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: translateY(15px);
+                transform: scale(0.95) translateY(20px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1) translateY(0);
             }
+        }
+
+        .auth-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: var(--glass-border);
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-visual {
+            width: 45%;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .auth-form-side {
+            width: 55%;
+            padding: 4rem 3.5rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+        }
+
+        .quote-box h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            line-height: 1.2;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+
+        .ethio-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-header p {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1.8rem;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-gold);
+            opacity: 0.6;
+            font-size: 1.1rem;
+        }
+
+        .form-control-premium {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 16px !important;
+            padding: 14px 20px 14px 55px !important;
+            color: #fff !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .form-control-premium:focus {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: var(--primary-gold) !important;
+            box-shadow: 0 0 15px rgba(252, 221, 9, 0.2) !important;
+            outline: none;
+        }
+
+        .btn-auth-premium {
+            background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            width: 100%;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 20px rgba(252, 221, 9, 0.2);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-auth-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(252, 221, 9, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .auth-footer a {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .auth-visual {
+                display: none;
+            }
+
+            .auth-form-side {
+                width: 100%;
+                padding: 3rem 2rem;
+            }
+
+            .login-wrapper {
+                max-width: 500px;
+            }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.7;
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+            color: var(--primary-gold);
         }
     </style>
 </head>
 
 <body>
-    <div class="container-fluid p-0 split-layout">
-        <div class="row g-0 h-100 min-vh-100">
-            <!-- Left Side: Visual -->
-            <div class="col-lg-6 d-none d-lg-flex image-side">
-                <div class="quote-container fade-in">
-                    <div class="quote-card">
-                        <div class="quote-text">
-                            "Dining is not just about eating; it's about the experience, the culture, and the joy of
-                            sharing."
-                        </div>
-                        <div class="quote-sub">
-                            Experience Ethio-Luxury
-                        </div>
-                    </div>
+    <a href="index.php" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <div class="login-wrapper">
+        <div class="auth-card">
+            <!-- Left Visual Side -->
+            <div class="auth-visual">
+                <a href="index.php" class="brand-logo">
+                    <i class="fas fa-utensils"></i> LUMINA DINING
+                </a>
+
+                <div class="quote-box">
+                    <span class="ethio-tag">
+                        <span style="color:var(--eth-green)">•</span>
+                        <span style="color:var(--primary-gold)">•</span>
+                        <span style="color:var(--eth-red)">•</span>
+                        Ethio-Luxury Experience
+                    </span>
+                    <h2>"Gastronomy is the art of using food to create happiness."</h2>
+                    <p class="mt-3 text-white-50">— Chef de Cuisine</p>
+                </div>
+
+                <div class="visual-footer small opacity-50">
+                    &copy; <?php echo date('Y'); ?> Lumina Dining. Crafted with passion.
                 </div>
             </div>
 
-            <!-- Right Side: Interaction -->
-            <div class="col-lg-6 form-side">
-                <!-- Navigation -->
-                <div class="back-nav">
-                    <a href="index.php" class="nav-link">
-                        <i class="fas fa-arrow-left me-2"></i> Back to Home
-                    </a>
+            <!-- Right Form Side -->
+            <div class="auth-form-side">
+                <div class="welcome-header">
+                    <h1>Welcome Back</h1>
+                    <p>Enter your credentials to access your dashboard.</p>
                 </div>
 
-                <div class="lang-nav dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-globe me-1"></i> English (US)
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                        <li><a class="dropdown-item" href="#">English</a></li>
-                        <li><a class="dropdown-item" href="#">Amharic</a></li>
-                    </ul>
-                </div>
+                <?php if (isset($_SESSION['flash']['login_error'])): ?>
+                    <div
+                        class="alert alert-danger bg-danger bg-opacity-10 text-danger border-0 py-3 rounded-4 mb-4 small d-flex align-items-center">
+                        <i class="fas fa-exclamation-circle me-3"></i>
+                        <?php echo flash('login_error')['message']; ?>
+                    </div>
+                <?php endif; ?>
 
-                <div class="form-container fade-in">
-                    <div class="mb-5">
-                        <h1 class="welcome-title">Welcome Back</h1>
-                        <p class="welcome-sub">Please enter your details to sign in.</p>
+                <form method="POST">
+                    <div class="mb-4">
+                        <label class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" class="form-control form-control-premium"
+                                placeholder="name@example.com" required>
+                        </div>
                     </div>
 
-                    <button class="btn btn-google">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20" alt="G">
-                        Log in with Google
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label">Password</label>
+                            <a href="#" class="small text-muted text-decoration-none hover-gold mb-2">Forgot
+                                Password?</a>
+                        </div>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" name="password" class="form-control form-control-premium"
+                                placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label small text-muted" for="rememberMe">
+                            Remember me for 30 days
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-auth-premium">Sign In to Account</button>
+
+                    <button type="button"
+                        class="btn btn-outline-light w-100 rounded-4 py-3 d-flex align-items-center justify-content-center gap-3 mb-4"
+                        style="border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.02);">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="18" alt="G">
+                        Continue with Google
                     </button>
+                </form>
 
-                    <div class="or-divider">Or</div>
-
-                    <!-- Alerts -->
-                    <?php if (isset($_SESSION['flash']['login_error'])): ?>
-                        <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border-0 py-2 small mb-4">
-                            <?php echo flash('login_error')['message']; ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <form method="POST">
-                        <div class="input-group-custom">
-                            <label class="input-label">Email Address</label>
-                            <input type="email" name="email" class="custom-input" placeholder="Enter your email"
-                                required>
-                        </div>
-
-                        <div class="input-group-custom">
-                            <label class="input-label">Password</label>
-                            <div class="pass-wrapper">
-                                <input type="password" id="password" name="password" class="custom-input"
-                                    placeholder="Enter password" required>
-                                <span class="toggle-btn" onclick="togglePass()">
-                                    <i class="fas fa-eye"></i>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input bg-transparent border-secondary" type="checkbox"
-                                    id="rem">
-                                <label class="form-check-label small opacity-75" for="rem">Remember me</label>
-                            </div>
-                            <a href="#" class="forgot-link">Forgot Password?</a>
-                        </div>
-
-                        <button type="submit" class="btn btn-login">Log In</button>
-                    </form>
-
-                    <p class="signup-text">
-                        Don't have an account? <a href="register.php">Sign up for free</a>
-                    </p>
+                <div class="auth-footer text-muted small">
+                    New to Lumina? <a href="register.php">Create an account</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function togglePass() {
-            const p = document.getElementById('password');
-            const i = document.querySelector('.toggle-btn i');
-            if (p.type === 'password') {
-                p.type = 'text';
-                i.className = 'fas fa-eye-slash';
-            } else {
-                p.type = 'password';
-                i.className = 'fas fa-eye';
-            }
-        }
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

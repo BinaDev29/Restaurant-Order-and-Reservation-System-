@@ -141,7 +141,7 @@ $employees = $controller->getEmployees($search);
         <div class="row g-4 fade-in-up" style="animation-delay: 0.2s;">
             <?php foreach ($employees as $emp): ?>
                 <div class="col-md-6 col-lg-4">
-                    <div class="stat-card detail-card position-relative">
+                    <div class="stat-card detail-card h-100 position-relative">
                         <!-- Status Badge -->
                         <span class="position-absolute top-0 end-0 m-4 badge rounded-pill 
                             <?php echo ($emp['emp_status'] ?? 'active') === 'active' ? 'bg-success' : 'bg-secondary'; ?> 

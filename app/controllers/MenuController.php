@@ -65,4 +65,37 @@ class MenuController
         flash('menu_msg', 'Item deleted.', 'warning');
         redirect('dashboard/menu.php');
     }
+
+    public function update()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = (int) $_POST['item_id'];
+            $name = sanitize_input($_POST['name']);
+            $desc = sanitize_input($_POST['description']);
+            $price = (float) $_POST['price'];
+            $cat_id = (int) $_POST['category_id'];
+
+            // Handle Image Update
+            $image_path = $_POST['current_image']; // Default to current image
+
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . '/../../uploads/';
+                if (!file_exists($uploadDir))
+                    mkdir($uploadDir, 0777, true);
+                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $filename = uniqid() . '.' . $ext;
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $filename)) {
+                    $image_path = $filename;
+                }
+            } elseif (!empty($_POST['image_url'])) {
+                $image_path = $_POST['image_url'];
+            }
+
+            $stmt = $this->pdo->prepare("UPDATE menu_items SET category_id = ?, name = ?, description = ?, price = ?, image = ? WHERE id = ?");
+            $stmt->execute([$cat_id, $name, $desc, $price, $image_path, $id]);
+
+            flash('menu_msg', 'Item updated successfully!');
+            redirect('dashboard/menu.php');
+        }
+    }
 }

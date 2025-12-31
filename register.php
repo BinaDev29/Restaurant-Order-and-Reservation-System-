@@ -14,390 +14,296 @@ $auth->register();
     <title>Register | <?php echo APP_NAME; ?></title>
     <!-- Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
         rel="stylesheet">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --primary-yellow: #FCDD09;
-            --darkER-bg: #0d0d0d;
-            --input-bg: #151515;
-            --border-rgba: rgba(255, 255, 255, 0.08);
+            --primary-gold: #FCDD09;
+            --secondary-gold: #d4af37;
+            --eth-green: #078930;
+            --eth-red: #DA121A;
+            --dark-bg: #080808;
+            --glass-bg: rgba(15, 15, 15, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         body {
-            overflow-x: hidden;
-            background-color: var(--darkER-bg);
+            background-color: var(--dark-bg);
             font-family: 'Outfit', sans-serif;
             color: #fff;
-        }
-
-        .split-layout {
             min-height: 100vh;
-        }
-
-        .image-side {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
-            position: relative;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 5rem 4rem;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(252, 221, 9, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                url('https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
         }
 
-        .quote-container {
-            max-width: 550px;
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1;
+        }
+
+        .auth-wrapper {
+            position: relative;
             z-index: 2;
-        }
-
-        .quote-card {
-            background: rgba(15, 15, 15, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-rgba);
-            padding: 2.5rem;
-            border-radius: 20px;
-            position: relative;
-            border-left: 5px solid var(--primary-yellow);
-        }
-
-        .quote-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.1rem;
-            line-height: 1.3;
-            margin-bottom: 1.5rem;
-            font-style: italic;
-        }
-
-        .quote-sub {
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .quote-sub::before {
-            content: '';
-            width: 40px;
-            height: 2px;
-            background: var(--primary-yellow);
-        }
-
-        .form-side {
-            background-color: var(--darkER-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem;
-            position: relative;
-        }
-
-        .form-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 1100px;
+            padding: 20px;
+            animation: fadeInScale 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* Nav Elements */
-        .back-nav {
-            position: absolute;
-            top: 40px;
-            left: 50px;
-        }
-
-        .lang-nav {
-            position: absolute;
-            top: 40px;
-            right: 50px;
-        }
-
-        .nav-link {
-            color: #fff;
-            opacity: 0.7;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: 0.3s;
-        }
-
-        .nav-link:hover {
-            opacity: 1;
-            color: var(--primary-yellow);
-        }
-
-        /* Heading */
-        .welcome-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-sub {
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 2.5rem;
-        }
-
-        /* Inputs */
-        .input-group-custom {
-            margin-bottom: 1.2rem;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 0.4rem;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-        }
-
-        .custom-input,
-        .custom-select {
-            background: var(--input-bg) !important;
-            border: 1px solid var(--border-rgba) !important;
-            border-radius: 12px !important;
-            padding: 0.9rem 1.1rem !important;
-            color: #fff !important;
-            width: 100%;
-            transition: 0.3s;
-        }
-
-        .custom-input:focus,
-        .custom-select:focus {
-            border-color: var(--primary-yellow) !important;
-            box-shadow: 0 0 0 2px rgba(252, 221, 9, 0.1) !important;
-            outline: none;
-        }
-
-        /* Google Btn */
-        .btn-google {
-            background: transparent;
-            border: 1px solid var(--border-rgba);
-            color: #fff;
-            padding: 0.8rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            width: 100%;
-            transition: 0.3s;
-        }
-
-        .btn-google:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .or-divider {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 2rem;
-        }
-
-        .or-divider::before,
-        .or-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        /* Primary Btn */
-        .btn-register {
-            background: var(--primary-yellow);
-            color: #000;
-            border: none;
-            padding: 1rem;
-            border-radius: 12px;
-            font-weight: 700;
-            width: 100%;
-            margin-top: 1rem;
-            transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(252, 221, 9, 0.1);
-        }
-
-        .btn-register:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 15px 25px rgba(252, 221, 9, 0.2);
-            background: #fde541;
-        }
-
-        .login-text {
-            margin-top: 2rem;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.85rem;
-        }
-
-        .login-text a {
-            color: var(--primary-yellow);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* Password Wrapper */
-        .pass-wrapper {
-            position: relative;
-        }
-
-        .toggle-btn {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        @keyframes fadeIn {
+        @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: translateY(15px);
+                transform: scale(0.95) translateY(20px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1) translateY(0);
             }
         }
 
-        select option {
-            background: #000;
+        .auth-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: var(--glass-border);
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-visual {
+            width: 40%;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .auth-form-side {
+            width: 60%;
+            padding: 4rem 4rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-header p {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 2.5rem;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-gold);
+            opacity: 0.6;
+        }
+
+        .form-control-premium {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 16px !important;
+            padding: 12px 20px 12px 50px !important;
+            color: #fff !important;
+        }
+
+        .form-control-premium:focus {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: var(--primary-gold) !important;
+            box-shadow: 0 0 15px rgba(252, 221, 9, 0.2) !important;
+            outline: none;
+        }
+
+        .btn-auth-premium {
+            background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            width: 100%;
+            font-size: 1rem;
+            box-shadow: 0 10px 20px rgba(252, 221, 9, 0.2);
+            transition: all 0.3s ease;
+            margin-top: 1.1rem;
+        }
+
+        .btn-auth-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(252, 221, 9, 0.3);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 40px;
+            left: 40px;
             color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        .ethio-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 992px) {
+            .auth-visual {
+                display: none;
+            }
+
+            .auth-form-side {
+                width: 100%;
+                padding: 3rem 2rem;
+            }
+
+            .auth-wrapper {
+                max-width: 500px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container-fluid p-0 split-layout">
-        <div class="row g-0 h-100 min-vh-100">
-            <!-- Left Side: Visual -->
-            <div class="col-lg-6 d-none d-lg-flex image-side">
-                <div class="quote-container fade-in">
-                    <div class="quote-card">
-                        <div class="quote-text">
-                            "Every dish tells a story of tradition, passion, and the warmth of Ethiopian hospitality."
-                        </div>
-                        <div class="quote-sub">
-                            Authentic Experience
-                        </div>
-                    </div>
+    <a href="index.php" class="back-btn">
+        <i class="fas fa-arrow-left me-2"></i> Back to Home
+    </a>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-visual">
+                <div class="brand-logo h3 fw-bold"
+                    style="font-family: 'Playfair Display', serif; color: var(--primary-gold);">
+                    <i class="fas fa-utensils me-2"></i> LUMINA
+                </div>
+
+                <div class="quote-box">
+                    <span class="ethio-tag small mb-3">Ancient Flavors, Modern Luxury</span>
+                    <h2 class="display-6 italic" style="font-family: 'Playfair Display', serif; font-style: italic;">
+                        "Food is the most primitive form of comfort."</h2>
+                </div>
+
+                <div class="visual-footer small opacity-50">
+                    &copy; <?php echo date('Y'); ?> Lumina Dining.
                 </div>
             </div>
 
-            <!-- Right Side: Interaction -->
-            <div class="col-lg-6 form-side">
-                <!-- Navigation -->
-                <div class="back-nav">
-                    <a href="index.php" class="nav-link">
-                        <i class="fas fa-arrow-left me-2"></i> Back to Home
-                    </a>
+            <div class="auth-form-side">
+                <div class="welcome-header">
+                    <h1>Create Account</h1>
+                    <p>Start your exclusive culinary journey today.</p>
                 </div>
 
-                <div class="form-container fade-in">
-                    <div class="mb-4">
-                        <h1 class="welcome-title">Join Us</h1>
-                        <p class="welcome-sub">Create an account to start your culinary journey.</p>
+                <?php if (isset($_SESSION['flash']['register_error'])): ?>
+                    <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border-0 py-3 rounded-4 mb-4 small">
+                        <i class="fas fa-info-circle me-2"></i> <?php echo flash('register_error')['message']; ?>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Full Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" name="full_name" class="form-control form-control-premium"
+                                    placeholder="John Doe" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" name="email" class="form-control form-control-premium"
+                                    placeholder="name@email.com" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" name="phone" class="form-control form-control-premium"
+                                    placeholder="+251..." required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Create Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" name="password" class="form-control form-control-premium"
+                                    placeholder="min. 8 characters" required>
+                            </div>
+                        </div>
                     </div>
 
-                    <button class="btn btn-google">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20" alt="G">
-                        Sign up with Google
-                    </button>
+                    <button type="submit" class="btn btn-auth-premium">Create Exclusive Account</button>
 
-                    <div class="or-divider">Or use email</div>
-
-                    <!-- Alerts -->
-                    <?php if (isset($_SESSION['flash']['register_error'])): ?>
-                        <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border-0 py-2 small mb-4">
-                            <?php echo flash('register_error')['message']; ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <form method="POST">
-                        <div class="input-group-custom">
-                            <label class="input-label">Full Name</label>
-                            <input type="text" name="full_name" class="custom-input" placeholder="Enter your full name"
-                                required>
-                        </div>
-
-                        <div class="input-group-custom">
-                            <label class="input-label">Email Address</label>
-                            <input type="email" name="email" class="custom-input" placeholder="Enter your email"
-                                required>
-                        </div>
-
-                        <div class="row g-3">
-                            <div class="col-4">
-                                <div class="input-group-custom">
-                                    <label class="input-label">Code</label>
-                                    <select class="custom-select" id="countryCode">
-                                        <option value="+251">🇪🇹 +251</option>
-                                        <option value="+1">🇺🇸 +1</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-8">
-                                <div class="input-group-custom">
-                                    <label class="input-label">Phone Number</label>
-                                    <input type="tel" name="phone" class="custom-input" placeholder="912..." required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="input-group-custom">
-                            <label class="input-label">Create Password</label>
-                            <div class="pass-wrapper">
-                                <input type="password" id="password" name="password" class="custom-input"
-                                    placeholder="Create a strong password" required>
-                                <span class="toggle-btn" onclick="togglePass()">
-                                    <i class="fas fa-eye"></i>
-                                </span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-register">Create Account</button>
-                    </form>
-
-                    <p class="login-text">
-                        Already have an account? <a href="login.php">Log in</a>
-                    </p>
-                </div>
+                    <div class="text-center mt-4">
+                        <span class="text-muted small">Already a member? <a href="login.php"
+                                style="color:var(--primary-gold); text-decoration:none; font-weight:600;">Sign
+                                In</a></span>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script>
-        function togglePass() {
-            const p = document.getElementById('password');
-            const i = document.querySelector('.toggle-btn i');
-            if (p.type === 'password') {
-                p.type = 'text';
-                i.className = 'fas fa-eye-slash';
-            } else {
-                p.type = 'password';
-                i.className = 'fas fa-eye';
-            }
-        }
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

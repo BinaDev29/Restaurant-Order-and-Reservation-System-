@@ -65,12 +65,67 @@ function updateCartUI() {
     const badge = document.getElementById('cart-count');
     if (badge) {
         badge.innerText = count;
-        // Bump animation
-        badge.classList.add('animate__rubberBand'); // Requires animate.css or manually add keyframes
-        // fallback manual scale
         badge.style.transform = 'scale(1.2)';
         setTimeout(() => badge.style.transform = 'scale(1)', 200);
     }
+    updateCartDrawerUI();
+}
+
+function updateCartDrawerUI() {
+    const container = document.getElementById('cart-items-container');
+    if (!container) return;
+
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-5 opacity-25">
+                <i class="fas fa-shopping-basket fa-3x mb-3"></i>
+                <p>Your basket is empty</p>
+            </div>`;
+        document.getElementById('cart-total').innerText = 'ETB 0.00';
+        return;
+    }
+
+    container.innerHTML = cart.map(item => `
+        <div class="cart-item-ui">
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h6 class="mb-0 fw-bold">${item.name}</h6>
+                    <button class="btn btn-sm text-danger p-0" onclick="removeFromCart('${item.id}')">
+                        <i class="fas fa-trash-alt small"></i>
+                    </button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="qty-control d-flex align-items-center gap-2">
+                        <button class="btn btn-sm btn-glass p-0 px-2" onclick="updateQty('${item.id}', -1)">-</button>
+                        <span class="small">${item.qty}</span>
+                        <button class="btn btn-sm btn-glass p-0 px-2" onclick="updateQty('${item.id}', 1)">+</button>
+                    </div>
+                    <span class="text-primary-gold small fw-bold">ETB ${(item.price * item.qty).toFixed(2)}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('cart-total').innerText = 'ETB ' + calculateTotal();
+}
+
+function updateQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) {
+            removeFromCart(id);
+        } else {
+            saveCart();
+            updateCartUI();
+        }
+    }
+}
+
+function removeFromCart(id) {
+    cart = cart.filter(i => i.id !== id);
+    saveCart();
+    updateCartUI();
 }
 
 function submitOrder() {
@@ -79,11 +134,11 @@ function submitOrder() {
         return;
     }
 
-    if (!confirm(`Place order for ${cart.length} items? Total: ETB ${calculateTotal()}`)) {
-        return;
-    }
+    const btn = document.getElementById('checkout-btn-drawer');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Placing Order...';
+    btn.disabled = true;
 
-    // Send to API
     fetch('app/api/orders.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,7 +147,7 @@ function submitOrder() {
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                showToast('Order placed successfully! Kitchen notified.', 'success');
+                showToast('Order confirmed! Moving to tracker...', 'success');
                 cart = [];
                 saveCart();
                 updateCartUI();
@@ -104,11 +159,15 @@ function submitOrder() {
                 if (data.message && data.message.includes('Login')) {
                     setTimeout(() => window.location.href = 'login.php', 1500);
                 }
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         })
         .catch(err => {
             console.error(err);
             showToast('Connection error. Please try again.', 'danger');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         });
 }
 

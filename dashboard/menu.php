@@ -9,6 +9,8 @@ $controller = new MenuController();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'add') {
         $controller->store();
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'edit') {
+        $controller->update();
     } elseif (isset($_POST['action']) && $_POST['action'] === 'delete') {
         $controller->delete($_POST['item_id']);
     }
@@ -90,7 +92,16 @@ $categories = $controller->getCategories();
                                             <button type="submit" class="btn btn-sm btn-outline-danger"><i
                                                     class="fas fa-trash"></i></button>
                                         </form>
-                                        <button class="btn btn-sm btn-outline-info"><i class="fas fa-edit"></i></button>
+                                        <button type="button" class="btn btn-sm btn-outline-info edit-btn"
+                                            data-bs-toggle="modal" data-bs-target="#editModal"
+                                            data-id="<?php echo $item['id']; ?>"
+                                            data-name="<?php echo htmlspecialchars($item['name']); ?>"
+                                            data-category="<?php echo $item['category_id']; ?>"
+                                            data-price="<?php echo $item['price']; ?>"
+                                            data-description="<?php echo htmlspecialchars($item['description']); ?>"
+                                            data-image="<?php echo $item['image']; ?>">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -155,7 +166,83 @@ $categories = $controller->getCategories();
         </div>
     </div>
 
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title">Edit MenuItem</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="action" value="edit">
+                        <input type="hidden" name="item_id" id="edit_item_id">
+                        <input type="hidden" name="current_image" id="edit_current_image">
+
+                        <div class="mb-3">
+                            <label class="form-label">Dish Name</label>
+                            <input type="text" name="name" id="edit_name"
+                                class="form-control bg-black text-white border-secondary" required>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Category</label>
+                                <select name="category_id" id="edit_category_id"
+                                    class="form-select bg-black text-white border-secondary" required>
+                                    <?php foreach ($categories as $cat): ?>
+                                        <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Price</label>
+                                <input type="number" step="0.01" name="price" id="edit_price"
+                                    class="form-control bg-black text-white border-secondary" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" id="edit_description"
+                                class="form-control bg-black text-white border-secondary" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Update Image (Optional)</label>
+                            <input type="file" name="image"
+                                class="form-control bg-black text-white border-secondary mb-2">
+                            <input type="url" name="image_url" id="edit_image_url" placeholder="https://..."
+                                class="form-control bg-black text-white border-secondary">
+                            <small class="text-muted">Leave blank to keep existing image</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary-gold">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.getElementById('edit_item_id').value = this.dataset.id;
+                document.getElementById('edit_name').value = this.dataset.name;
+                document.getElementById('edit_category_id').value = this.dataset.category;
+                document.getElementById('edit_price').value = this.dataset.price;
+                document.getElementById('edit_description').value = this.dataset.description;
+                document.getElementById('edit_current_image').value = this.dataset.image;
+
+                // Reset image URL field
+                document.getElementById('edit_image_url').value = '';
+                if (this.dataset.image.startsWith('http')) {
+                    document.getElementById('edit_image_url').value = this.dataset.image;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -47,11 +47,11 @@ $featured = $menuModel->getFeaturedItems();
                     <li class="nav-item"><a class="nav-link text-white" href="#experience">Experience</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="#reservation">Reservation</a></li>
                     <li class="nav-item ms-2">
-                        <button class="btn btn-outline-warning position-relative" id="checkout-btn">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                id="cart-count">
+                        <button class="btn btn-outline-warning position-relative border-0 fs-5" id="open-cart">
+                            <i class="fas fa-shopping-basket"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle"
+                                id="cart-count"
+                                style="background: var(--primary-color); color: #000; font-size: 0.7rem;">
                                 0
                             </span>
                         </button>
@@ -158,7 +158,7 @@ $featured = $menuModel->getFeaturedItems();
                         <i class="fas fa-utensils fa-3x text-muted mb-3 opacity-50"></i>
                         <h4 class="text-white">Our Menu is Curating...</h4>
                         <p class="text-muted">Admin hasn't added any signature dishes yet.</p>
-                        <?php if(is_logged_in() && ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'staff')): ?>
+                        <?php if (is_logged_in() && ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'staff')): ?>
                             <a href="dashboard/menu.php" class="btn btn-primary-gold mt-2">Add Items Now</a>
                         <?php endif; ?>
                     </div>
@@ -181,7 +181,8 @@ $featured = $menuModel->getFeaturedItems();
                                             class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill fs-6 item-price"><?php echo format_price($item['price']); ?></span>
                                     </div>
                                     <p class="card-text text-muted mb-4 flex-grow-1" style="line-height: 1.6;">
-                                        <?php echo $item['description']; ?></p>
+                                        <?php echo $item['description']; ?>
+                                    </p>
                                     <button class="btn btn-primary-gold w-100 fw-bold shadow-sm rounded-pill add-to-cart-btn"
                                         data-id="<?php echo $item['id']; ?>">
                                         <i class="fas fa-cart-plus me-2"></i> Add to Order
@@ -291,21 +292,28 @@ $featured = $menuModel->getFeaturedItems();
                                 <div class="col-md-6">
                                     <label class="form-label text-muted small fw-bold">DATE</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i class="fas fa-calendar-alt"></i></span>
-                                        <input type="date" name="date" class="form-control border-secondary" min="<?php echo date('Y-m-d'); ?>" required>
+                                        <span
+                                            class="input-group-text bg-transparent border-secondary text-primary-gold"><i
+                                                class="fas fa-calendar-alt"></i></span>
+                                        <input type="date" name="date" class="form-control border-secondary"
+                                            min="<?php echo date('Y-m-d'); ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-muted small fw-bold">TIME</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i class="fas fa-clock"></i></span>
+                                        <span
+                                            class="input-group-text bg-transparent border-secondary text-primary-gold"><i
+                                                class="fas fa-clock"></i></span>
                                         <input type="time" name="time" class="form-control border-secondary" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-muted small fw-bold">GUESTS</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i class="fas fa-users"></i></span>
+                                        <span
+                                            class="input-group-text bg-transparent border-secondary text-primary-gold"><i
+                                                class="fas fa-users"></i></span>
                                         <select name="guests" class="form-select border-secondary">
                                             <option value="1">1 Person</option>
                                             <option value="2" selected>2 People</option>
@@ -323,7 +331,9 @@ $featured = $menuModel->getFeaturedItems();
                                 <div class="col-md-6">
                                     <label class="form-label text-muted small fw-bold">EXPERIENCE TYPE</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i class="fas fa-glass-cheers"></i></span>
+                                        <span
+                                            class="input-group-text bg-transparent border-secondary text-primary-gold"><i
+                                                class="fas fa-glass-cheers"></i></span>
                                         <select name="type" class="form-select border-secondary">
                                             <option value="dinner">Standard Dinner</option>
                                             <option value="coffee">Coffee Ceremony</option>
@@ -335,16 +345,22 @@ $featured = $menuModel->getFeaturedItems();
                                 <div class="col-12">
                                     <label class="form-label text-muted small fw-bold">CONTACT PHONE</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-transparent border-secondary text-primary-gold"><i class="fas fa-phone"></i></span>
-                                        <input type="tel" name="phone" class="form-control border-secondary" placeholder="+251..." required>
+                                        <span
+                                            class="input-group-text bg-transparent border-secondary text-primary-gold"><i
+                                                class="fas fa-phone"></i></span>
+                                        <input type="tel" name="phone" class="form-control border-secondary"
+                                            placeholder="+251..." required>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label text-muted small fw-bold">SPECIAL REQUESTS (OPTIONAL)</label>
-                                    <textarea name="requests" class="form-control border-secondary" rows="2" placeholder="Allergies, anniversaries, or specific table preferences..."></textarea>
+                                    <label class="form-label text-muted small fw-bold">SPECIAL REQUESTS
+                                        (OPTIONAL)</label>
+                                    <textarea name="requests" class="form-control border-secondary" rows="2"
+                                        placeholder="Allergies, anniversaries, or specific table preferences..."></textarea>
                                 </div>
                                 <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-primary-gold w-100 py-3 text-uppercase letter-spacing-2 fw-bold shadow-lg">
+                                    <button type="submit"
+                                        class="btn btn-primary-gold w-100 py-3 text-uppercase letter-spacing-2 fw-bold shadow-lg">
                                         Confirm Reservation <i class="fas fa-paper-plane ms-2"></i>
                                     </button>
                                 </div>
@@ -369,6 +385,9 @@ $featured = $menuModel->getFeaturedItems();
                 Ethco Coders.</p>
         </div>
     </footer>
+
+    <!-- Cart Drawer Partial -->
+    <?php include 'app/partials/cart_drawer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

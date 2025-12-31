@@ -113,7 +113,7 @@ $tables = $controller->index();
             <?php foreach ($tables as $table): ?>
                 <div class="col-md-3">
                     <div
-                        class="stat-card flex-column align-items-start p-4 <?php echo $table['status'] === 'occupied' ? 'border-danger' : ''; ?>">
+                        class="stat-card detail-card h-100 position-relative flex-column align-items-start p-4 <?php echo $table['status'] === 'occupied' ? 'border-danger' : ''; ?>">
                         <div class="d-flex justify-content-between w-100 mb-3">
                             <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center fw-bold text-dark fs-5"
                                 style="width: 50px; height: 50px;">

@@ -38,39 +38,79 @@ $user = current_user();
 
     <div class="main-content">
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-end mb-5 text-white fade-in-up dashboard-header">
+        <div class="d-flex justify-content-between align-items-end mb-4 text-white fade-in-up dashboard-header">
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>
                 <div>
-                    <h6 class="text-primary-gold text-uppercase letter-spacing-2 mb-1">Overview</h6>
-                    <h2 class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">Dashboard</h2>
+                    <?php
+                    $hour = date('H');
+                    $greeting = "Good Evening";
+                    if ($hour < 12) {
+                        $greeting = "Good Morning";
+                    } elseif ($hour < 18) {
+                        $greeting = "Good Afternoon";
+                    }
+                    ?>
+                    <h6 class="text-primary-gold text-uppercase letter-spacing-2 mb-1"><?php echo $greeting; ?>,
+                        <?php echo explode(' ', $user['full_name'])[0]; ?>!</h6>
+                    <h2 class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">Welcome Back</h2>
                 </div>
             </div>
-            <div class="dropdown text-end">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                    id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center text-dark fw-bold me-2"
-                        style="width: 45px; height: 45px;">
-                        <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
-                    </div>
-                    <div class="d-none d-md-block text-start">
-                        <div class="fw-bold"><?php echo htmlspecialchars($user['full_name']); ?></div>
-                        <small class="text-muted text-uppercase"
-                            style="font-size: 0.7rem; letter-spacing: 1px;"><?php echo ucfirst($user['role']); ?></small>
-                    </div>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark px-2 shadow-lg border-secondary"
-                    aria-labelledby="dropdownUser1" style="min-width: 200px;">
-                    <li><a class="dropdown-item rounded-2 mb-1" href="profile.php"><i
-                                class="fas fa-user-circle me-2 text-primary-gold"></i> Profile</a></li>
-                    <li>
-                        <hr class="dropdown-divider bg-secondary opacity-25">
-                    </li>
-                    <li><a class="dropdown-item rounded-2 text-danger" href="../logout.php"><i
-                                class="fas fa-sign-out-alt me-2"></i> Sign out</a></li>
-                </ul>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end d-none d-md-block">
+                    <div class="text-white-50 small"><i class="far fa-calendar-alt me-1"></i>
+                        <?php echo date('l, M d'); ?></div>
+                    <div class="text-primary-gold fw-bold" id="live-clock"><?php echo date('h:i A'); ?></div>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none" id="dropdownUser1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-avatar-premium">
+                            <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center text-dark fw-bold"
+                                style="width: 45px; height: 45px; border: 2px solid rgba(255,255,255,0.1);">
+                                <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                            </div>
+                            <span class="status-indicator online"></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark px-2 shadow-lg border-secondary"
+                        aria-labelledby="dropdownUser1" style="min-width: 200px;">
+                        <li class="px-3 py-2 border-bottom border-secondary mb-2">
+                            <div class="fw-bold"><?php echo htmlspecialchars($user['full_name']); ?></div>
+                            <small class="text-muted text-uppercase"
+                                style="font-size: 0.65rem;"><?php echo $user['role']; ?></small>
+                        </li>
+                        <li><a class="dropdown-item rounded-2 mb-1" href="profile.php"><i
+                                    class="fas fa-user-circle me-2 text-primary-gold"></i> My Profile</a></li>
+                        <li><a class="dropdown-item rounded-2 mb-1" href="settings.php"><i
+                                    class="fas fa-cog me-2 text-primary-gold"></i> Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider bg-secondary opacity-25">
+                        </li>
+                        <li><a class="dropdown-item rounded-2 text-danger" href="../logout.php"><i
+                                    class="fas fa-sign-out-alt me-2"></i> Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions-bar mb-5 fade-in-up" style="animation-delay: 0.05s;">
+            <div class="d-flex flex-wrap gap-2">
+                <?php if ($user['role'] === 'admin'): ?>
+                    <a href="menu.php" class="btn btn-action-pill"><i class="fas fa-utensils me-2"></i> Update Menu</a>
+                    <a href="reservations.php" class="btn btn-action-pill"><i class="fas fa-calendar-plus me-2"></i> New
+                        Booking</a>
+                    <a href="employees.php" class="btn btn-action-pill"><i class="fas fa-user-plus me-2"></i> Manage
+                        Staff</a>
+                <?php elseif ($user['role'] === 'chef'): ?>
+                    <a href="orders.php" class="btn btn-action-pill"><i class="fas fa-fire me-2"></i> View Tickets</a>
+                    <a href="menu.php" class="btn btn-action-pill"><i class="fas fa-clipboard-list me-2"></i> Inventory</a>
+                <?php endif; ?>
+                <button onclick="window.location.reload()" class="btn btn-action-pill ms-auto"><i
+                        class="fas fa-sync-alt"></i> Refresh</button>
             </div>
         </div>
 
@@ -79,7 +119,7 @@ $user = current_user();
             <?php if ($user['role'] === 'admin'): ?>
                 <!-- Admin Stats -->
                 <div class="col-md-3">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Total Revenue</h6>
                             <h3 class="text-white"><?php echo format_price($stats['revenue']); ?></h3>
@@ -91,7 +131,7 @@ $user = current_user();
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Pending Orders</h6>
                             <h3 class="text-white"><?php echo $stats['pending_orders']; ?></h3>
@@ -103,7 +143,7 @@ $user = current_user();
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Today's Visits</h6>
                             <h3 class="text-white"><?php echo $stats['reservations_today']; ?></h3>
@@ -115,7 +155,7 @@ $user = current_user();
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Active Menu</h6>
                             <h3 class="text-white"><?php echo $stats['active_items']; ?></h3>
@@ -133,7 +173,7 @@ $user = current_user();
             <?php if ($user['role'] === 'chef'): ?>
                 <!-- CHEF VIEW -->
                 <div class="col-md-4">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Pending Orders</h6>
                             <h3 class="text-white" id="stat-pending"><?php echo $stats['pending_orders']; ?></h3>
@@ -145,7 +185,7 @@ $user = current_user();
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Cooking Now</h6>
                             <h3 class="text-white" id="stat-active"><?php echo $stats['active_orders_count']; ?></h3>
@@ -173,7 +213,7 @@ $user = current_user();
             <?php elseif ($user['role'] === 'waiter'): ?>
                 <!-- WAITER VIEW -->
                 <div class="col-md-4">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Ready to Serve</h6>
                             <h3 class="text-white" id="stat-ready">0</h3>
@@ -187,7 +227,7 @@ $user = current_user();
                 </div>
 
                 <div class="col-md-4">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Occupied Tables</h6>
                             <h3 class="text-white"><?php echo $stats['occupied_tables']; ?></h3>
@@ -200,7 +240,7 @@ $user = current_user();
                 </div>
 
                 <div class="col-md-4">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Guests Today</h6>
                             <h3 class="text-white"><?php echo $stats['reservations_today']; ?></h3>
@@ -215,7 +255,7 @@ $user = current_user();
             <?php else: ?>
                 <!-- Generic Staff View (Fallback) -->
                 <div class="col-md-4">
-                    <div class="stat-card stat-card-summary">
+                    <div class="stat-card stat-card-summary h-100">
                         <div>
                             <h6 class="text-primary-gold">Active Orders</h6>
                             <h3 class="text-white"><?php echo $stats['active_orders_count']; ?></h3>
@@ -229,7 +269,7 @@ $user = current_user();
             <?php endif; ?>
             <!-- Customer Stats -->
             <div class="col-md-4">
-                <div class="stat-card stat-card-summary">
+                <div class="stat-card stat-card-summary h-100">
                     <div>
                         <h6 class="text-primary-gold">Active Orders</h6>
                         <h3 class="text-white"><?php echo $stats['active_orders']; ?></h3>
@@ -241,7 +281,7 @@ $user = current_user();
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card stat-card-summary">
+                <div class="stat-card stat-card-summary h-100">
                     <div>
                         <h6 class="text-primary-gold">Reservations</h6>
                         <h3 class="text-white"><?php echo $stats['upcoming_reservations']; ?></h3>
@@ -253,7 +293,7 @@ $user = current_user();
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card stat-card-summary">
+                <div class="stat-card stat-card-summary h-100">
                     <div>
                         <h6 class="text-primary-gold">Total Spent</h6>
                         <h3 class="text-white"><?php echo format_price($stats['total_spent']); ?></h3>
@@ -377,6 +417,16 @@ $user = current_user();
 
         // Poll every 10 seconds
         setInterval(checkUpdates, 10000);
+
+        // Update Clock
+        function updateClock() {
+            const now = new Date();
+            const clock = document.getElementById('live-clock');
+            if (clock) {
+                clock.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+        setInterval(updateClock, 1000);
     </script>
 </body>
 

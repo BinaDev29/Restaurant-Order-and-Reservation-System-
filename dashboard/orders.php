@@ -8,14 +8,14 @@ $user = current_user();
 
 // Handle Status Update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
-    if ($user['role'] === 'admin') {
+    if (in_array($user['role'], ['admin', 'staff', 'chef', 'waiter'])) {
         $controller->updateStatus($_POST['order_id'], $_POST['status']);
-        flash('order_msg', 'Order status updated.');
+        flash('order_msg', 'Order #' . $_POST['order_id'] . ' updated to ' . $_POST['status']);
         redirect('dashboard/orders.php');
     }
 }
 
-$orders = $controller->index();
+$orders = $controller->getOrdersWithItems();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,8 +26,125 @@ $orders = $controller->index();
     <title>Orders | <?php echo APP_NAME; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <style>
+        .order-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .order-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-body {
+            padding: 1.5rem;
+        }
+
+        .order-footer {
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-pill {
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .status-preparing {
+            background: rgba(13, 202, 240, 0.1);
+            color: #0dcaf0;
+            border: 1px solid rgba(13, 202, 240, 0.2);
+        }
+
+        .status-ready {
+            background: rgba(25, 135, 84, 0.1);
+            color: #198754;
+            border: 1px solid rgba(25, 135, 84, 0.2);
+            box-shadow: 0 0 15px rgba(25, 135, 84, 0.2);
+            animation: pulse-green 2s infinite;
+        }
+
+        .status-completed {
+            background: rgba(255, 255, 255, 0.05);
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-cancelled {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        @keyframes pulse-green {
+            0% {
+                box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+            }
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .item-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .item-list li:last-child {
+            border-bottom: none;
+        }
+
+        .btn-action-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,141 +152,144 @@ $orders = $controller->index();
     <?php include 'partials/sidebar.php'; ?>
 
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4 text-white">
-            <div class="d-flex align-items-center">
-                 <button class="btn btn-outline-light d-lg-none me-3" id="sidebarToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h2 class="mb-0">Order Management</h2>
+        <!-- Header -->
+        <div class="dashboard-header mb-4">
+            <div>
+                <h2 class="display-6 fw-bold text-white mb-1">Live Orders</h2>
+                <p class="text-white-50">Manage real-time kitchen requests and deliveries.</p>
             </div>
-            
-            <div class="d-flex align-items-center gap-3">
-                <?php if (isset($_SESSION['flash']['order_msg'])): ?>
-                    <div class="alert alert-success py-1 px-3 mb-0 d-none d-md-block"><?php echo flash('order_msg')['message']; ?></div>
-                <?php endif; ?>
 
-                <div class="dropdown text-end">
-                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center text-dark fw-bold me-2" style="width: 40px; height: 40px;">
-                            <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark px-2 shadow-lg border-secondary" aria-labelledby="dropdownUser1" style="min-width: 200px;">
-                         <li><div class="dropdown-header text-white fw-bold"><?php echo htmlspecialchars($user['full_name']); ?></div></li>
-                        <li><a class="dropdown-item rounded-2 mb-1" href="profile.php"><i class="fas fa-user-circle me-2 text-primary-gold"></i> Profile</a></li>
-                        <li><hr class="dropdown-divider bg-secondary opacity-25"></li>
-                        <li><a class="dropdown-item rounded-2 text-danger" href="../logout.php"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a></li>
-                    </ul>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-glass" onclick="location.reload()">
+                    <i class="fas fa-sync-alt me-2"></i> Refresh
+                </button>
+                <div class="user-avatar-premium">
+                    <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                    <div class="status-indicator"></div>
                 </div>
             </div>
         </div>
 
-        <div class="card bg-dark border-secondary">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>#ID</th>
-                                <th>Date</th>
-                                <?php if ($user['role'] === 'admin'): ?>
-                                    <th>User</th><?php endif; ?>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($orders as $order): ?>
-                                <tr>
-                                    <td><?php echo $order['id']; ?></td>
-                                    <td><?php echo date('M d, H:i', strtotime($order['created_at'])); ?></td>
-                                    <?php if ($user['role'] === 'admin'): ?>
-                                        <td><?php echo htmlspecialchars($order['full_name'] ?? 'Guest'); ?></td>
-                                    <?php endif; ?>
-                                    <td><?php echo format_price($order['total_amount']); ?></td>
-                                    <td>
-                                        <span class="badge <?php
-                                        echo match ($order['order_status']) {
-                                            'pending' => 'bg-warning text-dark',
-                                            'completed' => 'bg-eth-green text-white',
-                                            'cancelled' => 'bg-eth-red text-white',
-                                            'preparing' => 'bg-info text-dark',
-                                            'ready' => 'bg-primary pulse-green text-white',
-                                            default => 'bg-secondary text-white'
-                                        };
-                                        ?> rounded-pill px-3 py-2 fw-normal">
-                                            <?php echo ucfirst($order['order_status']); ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#details-<?php echo $order['id']; ?>">
-                                            Details
-                                        </button>
-                                        <?php if ($user['role'] === 'admin'): ?>
-                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                                                data-bs-target="#statusModal-<?php echo $order['id']; ?>">
-                                                Update
-                                            </button>
+        <?php if (isset($_SESSION['flash']['order_msg'])): ?>
+            <div class="alert alert-premium mb-4 animate__animated animate__fadeInDown">
+                <i class="fas fa-check-circle me-3 text-success"></i>
+                <?php echo flash('order_msg')['message']; ?>
+            </div>
+        <?php endif; ?>
 
-                                            <!-- Status Modal -->
-                                            <div class="modal fade" id="statusModal-<?php echo $order['id']; ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content bg-dark text-white border-secondary">
-                                                        <form method="POST">
-                                                            <div class="modal-header border-secondary">
-                                                                <h5 class="modal-title">Update Order
-                                                                    #<?php echo $order['id']; ?></h5>
-                                                                <button type="button" class="btn-close btn-close-white"
-                                                                    data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <input type="hidden" name="action" value="update_status">
-                                                                <input type="hidden" name="order_id"
-                                                                    value="<?php echo $order['id']; ?>">
-                                                                <label class="form-label">Select Status</label>
-                                                                <select name="status"
-                                                                    class="form-select bg-black text-white border-secondary">
-                                                                    <option value="pending" <?php echo $order['order_status'] == 'pending' ? 'selected' : ''; ?>>
-                                                                        Pending</option>
-                                                                    <option value="preparing" <?php echo $order['order_status'] == 'preparing' ? 'selected' : ''; ?>>
-                                                                        Preparing</option>
-                                                                    <option value="ready" <?php echo $order['order_status'] == 'ready' ? 'selected' : ''; ?>>Ready
-                                                                    </option>
-                                                                    <option value="completed" <?php echo $order['order_status'] == 'completed' ? 'selected' : ''; ?>>
-                                                                        Completed</option>
-                                                                    <option value="cancelled" <?php echo $order['order_status'] == 'cancelled' ? 'selected' : ''; ?>>
-                                                                        Cancelled</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="modal-footer border-secondary">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary-gold">Save
-                                                                    changes</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+        <div class="row">
+            <?php if (empty($orders)): ?>
+                <div class="col-12 text-center py-5">
+                    <div class="opacity-25 mb-3">
+                        <i class="fas fa-receipt fa-4x"></i>
+                    </div>
+                    <h4 class="text-white-50">No orders found matching your criteria.</h4>
+                </div>
+            <?php endif; ?>
+
+            <?php foreach ($orders as $order): ?>
+                <div class="col-xl-4 col-md-6">
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <span
+                                    class="text-primary-gold fw-bold">#ORD-<?php echo str_pad($order['id'], 5, '0', STR_PAD_LEFT); ?></span>
+                                <div class="small text-white-50">
+                                    <?php echo date('M d, H:i', strtotime($order['created_at'])); ?>
+                                </div>
+                            </div>
+                            <span class="status-pill status-<?php echo $order['order_status']; ?>">
+                                <?php echo $order['order_status']; ?>
+                            </span>
+                        </div>
+
+                        <div class="order-body">
+                            <div class="d-flex justify-content-between mb-3 align-items-center">
+                                <h6 class="mb-0 text-white-50">Customer Details</h6>
+                                <span
+                                    class="badge bg-primary-gold text-dark"><?php echo ucfirst($order['order_type'] ?? 'Dine-in'); ?></span>
+                            </div>
+                            <p class="mb-4 fw-bold"><?php echo htmlspecialchars($order['full_name'] ?? 'Guest'); ?></p>
+
+                            <h6 class="text-primary-gold mb-3 small text-uppercase letter-spacing-1">Order Items</h6>
+                            <ul class="item-list">
+                                <?php
+                                $items = explode(', ', $order['items_summary']);
+                                foreach ($items as $item): ?>
+                                    <li>
+                                        <span><?php echo htmlspecialchars($item); ?></span>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+
+                        <div class="order-footer">
+                            <div class="text-white">
+                                <span class="small opacity-50">Total</span>
+                                <div class="fw-bold fs-5"><?php echo format_price($order['total_amount']); ?></div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <?php if ($order['order_status'] === 'pending'): ?>
+                                    <form method="POST" class="d-inline">
+                                        <input type="hidden" name="action" value="update_status">
+                                        <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
+                                        <input type="hidden" name="status" value="preparing">
+                                        <button type="submit" class="btn btn-action-sm btn-outline-info">
+                                            Start Cooking
+                                        </button>
+                                    </form>
+                                <?php elseif ($order['order_status'] === 'preparing'): ?>
+                                    <form method="POST" class="d-inline">
+                                        <input type="hidden" name="action" value="update_status">
+                                        <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
+                                        <input type="hidden" name="status" value="ready">
+                                        <button type="submit" class="btn btn-action-sm btn-outline-success">
+                                            Mark Ready
+                                        </button>
+                                    </form>
+                                <?php elseif ($order['order_status'] === 'ready'): ?>
+                                    <form method="POST" class="d-inline">
+                                        <input type="hidden" name="action" value="update_status">
+                                        <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
+                                        <input type="hidden" name="status" value="completed">
+                                        <button type="submit" class="btn btn-action-sm btn-success text-white">
+                                            Served/Paid
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-action-sm btn-glass px-2" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary">
+                                        <li><a class="dropdown-item py-2" href="#"
+                                                onclick="viewDetails(<?php echo $order['id']; ?>)">View Details</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <?php if ($user['role'] === 'admin'): ?>
+                                            <li><a class="dropdown-item py-2 text-danger" href="#">Cancel Order</a></li>
                                         <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <tr class="collapse" id="details-<?php echo $order['id']; ?>">
-                                    <td colspan="6" class="bg-secondary bg-opacity-10 p-3">
-                                        <h6 class="text-primary-gold">Order Items</h6>
-                                        <!-- Logic to fetch items usually goes here, but for list view efficiency we might lazy load or pre-fetch if needed. 
-                                         For this demo, I'll just show static text or require detailed fetch. 
-                                         Ideally, we fetch all items with orders or trigger an AJAX call.
-                                         I will leave a placeholder for simplicity in this file. -->
-                                        <p class="text-muted small">Click 'View Full Details' (Implementation Pending for
-                                            specific item query)</p>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Details Modal Placeholder -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark border-secondary rounded-4">
+                <div id="modalContent">
+                    <div class="p-5 text-center">
+                        <div class="spinner-border text-primary-gold"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,9 +297,36 @@ $orders = $controller->index();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('sidebarToggle').addEventListener('click', function () {
-            document.querySelector('.sidebar').classList.toggle('show');
+        // Sidebar Toggle for Mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('sidebarToggle');
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    document.querySelector('.sidebar').classList.toggle('show');
+                });
+            }
         });
+
+        function viewDetails(id) {
+            const modal = new Bootstrap.Modal(document.getElementById('detailsModal'));
+            modal.show();
+            // In a real app, this would fetch details via AJAX
+            document.getElementById('modalContent').innerHTML = `
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Order Details #ORD-${String(id).padStart(5, '0')}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <i class="fas fa-spinner fa-spin fa-2x text-primary-gold mb-3"></i>
+                <p>Loading full order history and receipt...</p>
+            </div>
+            `;
+        }
+
+        // Live Polling simulation
+        setInterval(() => {
+            console.log("Checking for new orders...");
+        }, 30000);
     </script>
 </body>
 
