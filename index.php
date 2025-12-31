@@ -287,6 +287,18 @@ $featured = $menuModel->getFeaturedItems();
 
                 <div class="col-lg-7" data-aos="fade-left">
                     <div class="card p-4">
+                        <?php if ($f = flash('reservation_success')): ?>
+                            <div class="alert alert-success border-0 bg-success bg-opacity-10 text-success mb-4">
+                                <i class="fas fa-check-circle me-2"></i> <?php echo $f['message']; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($f = flash('reservation_error')): ?>
+                            <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger mb-4">
+                                <i class="fas fa-exclamation-circle me-2"></i> <?php echo $f['message']; ?>
+                            </div>
+                        <?php endif; ?>
+
                         <form action="app/api/reservations.php" method="POST">
                             <div class="row g-3">
                                 <div class="col-md-6">

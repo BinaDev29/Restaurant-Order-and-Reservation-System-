@@ -20,6 +20,13 @@ $auth->login();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Theme Script -->
+    <script>
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        if (currentTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
 
     <style>
         :root {
@@ -28,8 +35,86 @@ $auth->login();
             --eth-green: #078930;
             --eth-red: #DA121A;
             --dark-bg: #080808;
-            --glass-bg: rgba(15, 15, 15, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(15, 15, 15, 0.85);
+            /* Slightly darker for better text contrast */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="light"] {
+            --dark-bg: #f5f5f5;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] body::before {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        [data-theme="light"] .auth-form-side {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        [data-theme="light"] .welcome-header h1,
+        [data-theme="light"] .welcome-header p,
+        [data-theme="light"] .form-label,
+        [data-theme="light"] .auth-footer,
+        [data-theme="light"] .auth-footer a,
+        [data-theme="light"] .back-btn,
+        [data-theme="light"] .form-check-label,
+        [data-theme="light"] .hover-gold,
+        [data-theme="light"] .small {
+            color: #1a1a1a !important;
+            opacity: 1;
+        }
+
+        [data-theme="light"] .form-control-premium {
+            background: #ffffff !important;
+            border: 1px solid #ddd !important;
+            color: #1a1a1a !important;
+        }
+
+        [data-theme="light"] .form-control-premium::placeholder {
+            color: #888 !important;
+        }
+
+        [data-theme="light"] .input-wrapper i {
+            color: var(--secondary-gold);
+        }
+
+        [data-theme="light"] .form-control-premium,
+        [data-theme="light"] .form-control-premium:focus {
+            color: #1a1a1a !important;
+        }
+
+        [data-theme="light"] .btn-outline-light {
+            border-color: #ddd !important;
+            color: #333 !important;
+            background: #fff !important;
+        }
+
+        [data-theme="light"] .auth-visual,
+        [data-theme="light"] .auth-visual * {
+            color: #ffffff !important;
+        }
+
+        /* Forced White Text in Dark Mode */
+        :root:not([data-theme="light"]) .welcome-header h1,
+        :root:not([data-theme="light"]) .welcome-header p,
+        :root:not([data-theme="light"]) .form-label,
+        :root:not([data-theme="light"]) .auth-footer,
+        :root:not([data-theme="light"]) .auth-footer a,
+        :root:not([data-theme="light"]) .back-btn,
+        :root:not([data-theme="light"]) .form-check-label,
+        :root:not([data-theme="light"]) .text-white-80,
+        :root:not([data-theme="light"]) .visual-footer,
+        :root:not([data-theme="light"]) .form-control-premium,
+        :root:not([data-theme="light"]) .form-control-premium:focus {
+            color: #ffffff !important;
+            opacity: 1;
+        }
+
+        :root:not([data-theme="light"]) .form-control-premium::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
         }
 
         body {
@@ -150,18 +235,20 @@ $auth->login();
         }
 
         .welcome-header p {
-            color: rgba(255, 255, 255, 0.5);
+            color: #ffffff;
             margin-bottom: 2.5rem;
             font-size: 1.05rem;
+            opacity: 0.9;
         }
 
         .form-label {
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
+            color: #ffffff;
             font-weight: 500;
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            opacity: 0.95;
         }
 
         .input-wrapper {
@@ -180,8 +267,8 @@ $auth->login();
         }
 
         .form-control-premium {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
             border-radius: 16px !important;
             padding: 14px 20px 14px 55px !important;
             color: #fff !important;
@@ -218,7 +305,8 @@ $auth->login();
         .auth-footer {
             text-align: center;
             margin-top: 1rem;
-            color: rgba(255, 255, 255, 0.5);
+            color: #ffffff;
+            opacity: 0.9;
         }
 
         .auth-footer a {
@@ -286,10 +374,10 @@ $auth->login();
                         Ethio-Luxury Experience
                     </span>
                     <h2>"Gastronomy is the art of using food to create happiness."</h2>
-                    <p class="mt-3 text-white-50">— Chef de Cuisine</p>
+                    <p class="mt-3 text-white-80">— Chef de Cuisine</p>
                 </div>
 
-                <div class="visual-footer small opacity-50">
+                <div class="visual-footer small opacity-75">
                     &copy; <?php echo date('Y'); ?> Golden Bar and Restaurant. Crafted with passion.
                 </div>
             </div>
@@ -357,6 +445,7 @@ $auth->login();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/theme.js"></script>
 </body>
 
 </html>

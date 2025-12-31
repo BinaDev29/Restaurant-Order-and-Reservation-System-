@@ -380,36 +380,43 @@ h6 {
 
 /* Input Fields */
 /* Global Input Styling - Always Dark & Premium */
+/* Global Input Styling - Always Dark & Premium by default (Dark Mode) */
 .form-control,
 .form-select {
     background-color: rgba(20, 20, 20, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     color: #ffffff !important;
     padding: 12px;
     border-radius: 8px;
 }
 
 .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
 /* Remove Light Theme Override - Keep Dark */
+/* Light Theme Override - Professional Light Inputs with Dark Text */
 [data-theme="light"] .form-control,
 [data-theme="light"] .form-select {
-    background-color: rgba(20, 20, 20, 0.8) !important;
-    border: 1px solid rgba(0, 0, 0, 0.2) !important;
-    color: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    color: #1a1a1a !important;
 }
 
-/* Focus States - Consistent Dark Quality */
+[data-theme="light"] .form-control::placeholder {
+    color: #777777 !important;
+}
+
+/* Focus States */
 .form-control:focus,
-.form-select:focus,
+.form-select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25) !important;
+}
+
 [data-theme="light"] .form-control:focus,
 [data-theme="light"] .form-select:focus {
-    background-color: rgba(40, 40, 40, 0.9) !important;
-    color: #ffffff !important;
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 0.25rem rgba(253, 221, 9, 0.25);
+    background-color: #ffffff !important;
 }
 
 /* Fix for Select Options Visibility */

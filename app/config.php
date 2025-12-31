@@ -6,7 +6,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Configuration Constants
 define('APP_NAME', 'Golden Bar and Restaurant');
-define('APP_URL', 'http://localhost:8000'); // Set for php -S localhost:8000
+if (!defined('APP_URL')) {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
+    define('APP_URL', $protocol . $host);
+}
 define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'restaurant_db');
 define('DB_USER', 'root');

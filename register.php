@@ -20,6 +20,13 @@ $auth->register();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Theme Script -->
+    <script>
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        if (currentTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
 
     <style>
         :root {
@@ -28,8 +35,74 @@ $auth->register();
             --eth-green: #078930;
             --eth-red: #DA121A;
             --dark-bg: #080808;
-            --glass-bg: rgba(15, 15, 15, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(15, 15, 15, 0.85);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="light"] {
+            --dark-bg: #f5f5f5;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] body::before {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        [data-theme="light"] .auth-form-side {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        [data-theme="light"] .welcome-header h1,
+        [data-theme="light"] .welcome-header p,
+        [data-theme="light"] .form-label,
+        [data-theme="light"] .back-btn,
+        [data-theme="light"] .text-center span,
+        [data-theme="light"] .text-center a,
+        [data-theme="light"] .form-check-label {
+            color: #1a1a1a !important;
+            opacity: 1;
+        }
+
+        [data-theme="light"] .form-control-premium {
+            background: #ffffff !important;
+            border: 1px solid #ddd !important;
+            color: #1a1a1a !important;
+        }
+
+        [data-theme="light"] .form-control-premium::placeholder {
+            color: #888 !important;
+        }
+
+        [data-theme="light"] .input-wrapper i {
+            color: var(--secondary-gold);
+        }
+
+        [data-theme="light"] .form-control-premium,
+        [data-theme="light"] .form-control-premium:focus {
+            color: #1a1a1a !important;
+        }
+
+        [data-theme="light"] .auth-visual,
+        [data-theme="light"] .auth-visual * {
+            color: #ffffff !important;
+        }
+
+        /* Forced White Text in Dark Mode */
+        :root:not([data-theme="light"]) .welcome-header h1,
+        :root:not([data-theme="light"]) .welcome-header p,
+        :root:not([data-theme="light"]) .form-label,
+        :root:not([data-theme="light"]) .back-btn,
+        :root:not([data-theme="light"]) .text-white,
+        :root:not([data-theme="light"]) .visual-footer,
+        :root:not([data-theme="light"]) .form-control-premium,
+        :root:not([data-theme="light"]) .form-control-premium:focus {
+            color: #ffffff !important;
+            opacity: 1;
+        }
+
+        :root:not([data-theme="light"]) .form-control-premium::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
         }
 
         body {
@@ -117,13 +190,15 @@ $auth->register();
         }
 
         .welcome-header p {
-            color: rgba(255, 255, 255, 0.5);
+            color: #ffffff;
+            opacity: 0.9;
             margin-bottom: 2.5rem;
         }
 
         .form-label {
             font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+            opacity: 0.95;
             letter-spacing: 1px;
             text-transform: uppercase;
             font-weight: 600;
@@ -145,8 +220,8 @@ $auth->register();
         }
 
         .form-control-premium {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
             border-radius: 16px !important;
             padding: 12px 20px 12px 50px !important;
             color: #fff !important;
@@ -236,7 +311,7 @@ $auth->register();
                         "Food is the most primitive form of comfort."</h2>
                 </div>
 
-                <div class="visual-footer small opacity-50">
+                <div class="visual-footer small opacity-75">
                     &copy; <?php echo date('Y'); ?> Golden Bar and Restaurant.
                 </div>
             </div>
@@ -295,7 +370,7 @@ $auth->register();
                     <button type="submit" class="btn btn-auth-premium">Create Exclusive Account</button>
 
                     <div class="text-center mt-4">
-                        <span class="text-muted small">Already a member? <a href="login.php"
+                        <span class="text-white opacity-75 small">Already a member? <a href="login.php"
                                 style="color:var(--primary-gold); text-decoration:none; font-weight:600;">Sign
                                 In</a></span>
                     </div>
@@ -305,6 +380,7 @@ $auth->register();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/theme.js"></script>
 </body>
 
 </html>

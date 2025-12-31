@@ -141,10 +141,22 @@ function submitOrder() {
 
     fetch('app/api/orders.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
         body: JSON.stringify({ items: cart })
     })
-        .then(res => res.json())
+        .then(async res => {
+            const text = await res.text();
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Server returned non-JSON response:', text);
+                throw new Error('Server returned invalid data format.');
+            }
+        })
         .then(data => {
             if (data.status === 'success') {
                 showToast('Order confirmed! Moving to tracker...', 'success');
@@ -155,7 +167,7 @@ function submitOrder() {
                     window.location.href = 'dashboard/orders.php';
                 }, 1500);
             } else {
-                showToast(data.message, 'danger');
+                showToast(data.message || 'Order failed.', 'danger');
                 if (data.message && data.message.includes('Login')) {
                     setTimeout(() => window.location.href = 'login.php', 1500);
                 }
@@ -164,8 +176,8 @@ function submitOrder() {
             }
         })
         .catch(err => {
-            console.error(err);
-            showToast('Connection error. Please try again.', 'danger');
+            console.error('Order Error:', err);
+            showToast(err.message || 'Connection error. Please try again.', 'danger');
             btn.innerHTML = originalText;
             btn.disabled = false;
         });
@@ -187,9 +199,21 @@ function handleReservationSubmit(e) {
 
     fetch(form.action, {
         method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
         body: formData
     })
-        .then(res => res.json())
+        .then(async res => {
+            const text = await res.text();
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Server returned non-JSON response:', text);
+                throw new Error('Server returned invalid data format.');
+            }
+        })
         .then(data => {
             if (data.status === 'success') {
                 showToast('Table Reserved Successfully!', 'success');
@@ -199,8 +223,8 @@ function handleReservationSubmit(e) {
             }
         })
         .catch(err => {
-            console.error(err);
-            showToast('Something went wrong.', 'danger');
+            console.error('Reservation Error:', err);
+            showToast(err.message || 'Something went wrong.', 'danger');
         })
         .finally(() => {
             submitBtn.innerHTML = originalText;
