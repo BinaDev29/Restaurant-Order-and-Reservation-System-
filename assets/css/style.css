@@ -1,19 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
 
 :root {
-    --primary-color: #FCDD09;
-    /* Ethiopian Yellow */
+    --primary-color: #D4AF37;
+    /* Metallic Gold */
+    --gold-light: #FFD700;
+    --gold-dark: #A67C00;
+    --gold-gradient: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #A67C00 100%);
     --eth-green: #078930;
     --eth-red: #DA121A;
-    --dark-bg: #111111;
-    --card-bg: rgba(30, 30, 30, 0.5);
-    /* More transparent for clear form */
+    --dark-bg: #080808;
+    --card-bg: rgba(20, 20, 20, 0.6);
     --text-color: #ffffff;
-    --text-muted: #e0e0e0;
-    --glass-border: 1px solid rgba(255, 255, 255, 0.15);
-    --bg-overlay: rgba(0, 0, 0, 0.7);
-    --nav-bg: rgba(17, 17, 17, 0.95);
-    --section-bg-alt: #151515;
+    --text-muted: #d0d0d0;
+    --glass-border: 1px solid rgba(212, 175, 55, 0.2);
+    --bg-overlay: rgba(0, 0, 0, 0.85);
+    --nav-bg: rgba(8, 8, 8, 0.9);
+    --section-bg-alt: #050505;
     --primary-font: 'Outfit', sans-serif;
     --heading-font: 'Playfair Display', serif;
 }
@@ -101,11 +103,13 @@
 
 /* Exception for muted text in dark mode (slightly softer white) */
 :root:not([data-theme="light"]) .text-muted {
-    color: #e0e0e0 !important;
+    color: #d1d1d1 !important;
+    /* Brighter for readability */
 }
 
 :root:not([data-theme="light"]) .text-white-50 {
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    /* Increased opacity */
 }
 
 body {
@@ -179,20 +183,36 @@ h6 {
 
 /* Buttons */
 .btn-primary-gold {
-    background: linear-gradient(45deg, #FFD700, #FDB931);
-    border: none;
+    background: var(--gold-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #000;
-    font-weight: 600;
+    font-weight: 700;
     padding: 12px 30px;
     border-radius: 50px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary-gold::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: 0.5s;
+}
+
+.btn-primary-gold:hover::before {
+    left: 100%;
 }
 
 .btn-primary-gold:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-    background: linear-gradient(45deg, #FDB931, #FFD700);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
     color: #000;
 }
 
@@ -247,8 +267,15 @@ h6 {
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Cards & Glassmorphism */
@@ -301,8 +328,8 @@ h6 {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(17, 17, 17, 1)),
-        url('https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(5, 5, 5, 1)),
+        url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
     height: 90vh;

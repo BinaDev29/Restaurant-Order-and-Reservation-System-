@@ -34,25 +34,27 @@ $user = is_logged_in() ? current_user() : null;
 
     <style>
         :root {
-            --primary-gold: #FCDD09;
-            --secondary-gold: #d4af37;
-            --dark-bg: #080808;
-            --glass-bg: rgba(20, 20, 20, 0.85);
-            --card-glass: rgba(255, 255, 255, 0.03);
-            --border-rgba: rgba(255, 255, 255, 0.08);
+            --primary-gold: #D4AF37;
+            --light-gold: #FFD700;
+            --dark-gold: #A67C00;
+            --golden-gradient: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #A67C00 100%);
+            --dark-bg: #050505;
+            --glass-bg: rgba(10, 10, 10, 0.9);
+            --card-glass: rgba(255, 255, 255, 0.02);
+            --border-rgba: rgba(212, 175, 55, 0.15);
         }
 
         body {
             background-color: var(--dark-bg);
             font-family: 'Outfit', sans-serif;
             color: #fff;
-            background-image: radial-gradient(circle at top right, rgba(252, 221, 9, 0.05), transparent 400px);
+            background-image: radial-gradient(circle at top right, rgba(212, 175, 55, 0.1), transparent 500px);
             background-attachment: fixed;
         }
 
         .navbar {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-rgba);
             padding: 1.2rem 0;
             z-index: 1000;
@@ -60,7 +62,7 @@ $user = is_logged_in() ? current_user() : null;
 
         .hero-mini {
             height: 40vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2070&auto=format&fit=crop');
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1542365857-3a3a532aad26?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -202,7 +204,7 @@ $user = is_logged_in() ? current_user() : null;
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand text-primary-gold fw-bold" href="index.php">
-                <i class="fas fa-utensils me-2"></i> LUMINA
+                <i class="fas fa-utensils me-2"></i> Golden Bar and Restaurant
             </a>
 
             <div class="d-flex align-items-center gap-3">
@@ -258,8 +260,9 @@ $user = is_logged_in() ? current_user() : null;
                                     alt="<?php echo $item['name']; ?>">
                                 <div class="card-body p-4">
                                     <h5 class="fw-bold mb-1 text-white"><?php echo $item['name']; ?></h5>
-                                    <p class="text-white-50 small mb-4" style="height: 40px; overflow: hidden;">
-                                        <?php echo $item['description']; ?></p>
+                                    <p class="text-white-50 small mb-4">
+                                        <?php echo $item['description']; ?>
+                                    </p>
 
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span class="item-price"><?php echo format_price($item['price']); ?></span>

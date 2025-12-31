@@ -95,4 +95,14 @@ class OrderController
         $stmt = $this->pdo->prepare("UPDATE orders SET order_status = ? WHERE id = ?");
         return $stmt->execute([$status, $id]);
     }
+
+    public function cancelOrder($id)
+    {
+        $user = current_user();
+        if ($user['role'] !== 'admin')
+            return false;
+
+        $stmt = $this->pdo->prepare("UPDATE orders SET order_status = 'cancelled' WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 }

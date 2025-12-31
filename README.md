@@ -1,4 +1,4 @@
-# golden  - Restaurant Order & Reservation System
+# Golden Bar and Restaurant - Order & Reservation System
 
 A premium, full-stack PHP web application for restaurant management, featuring online ordering, table reservations, and a comprehensive dashboard for both staff and customers.
 

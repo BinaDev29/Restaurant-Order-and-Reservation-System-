@@ -275,7 +275,7 @@ $auth->login();
             <!-- Left Visual Side -->
             <div class="auth-visual">
                 <a href="index.php" class="brand-logo">
-                    <i class="fas fa-utensils"></i> LUMINA DINING
+                    <i class="fas fa-utensils"></i> Golden Bar and Restaurant
                 </a>
 
                 <div class="quote-box">
@@ -290,7 +290,7 @@ $auth->login();
                 </div>
 
                 <div class="visual-footer small opacity-50">
-                    &copy; <?php echo date('Y'); ?> Lumina Dining. Crafted with passion.
+                    &copy; <?php echo date('Y'); ?> Golden Bar and Restaurant. Crafted with passion.
                 </div>
             </div>
 
@@ -350,7 +350,7 @@ $auth->login();
                 </form>
 
                 <div class="auth-footer text-muted small">
-                    New to Lumina? <a href="register.php">Create an account</a>
+                    New to Golden Bar? <a href="register.php">Create an account</a>
                 </div>
             </div>
         </div>

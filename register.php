@@ -227,7 +227,7 @@ $auth->register();
             <div class="auth-visual">
                 <div class="brand-logo h3 fw-bold"
                     style="font-family: 'Playfair Display', serif; color: var(--primary-gold);">
-                    <i class="fas fa-utensils me-2"></i> LUMINA
+                    <i class="fas fa-utensils me-2"></i> Golden Bar and Restaurant
                 </div>
 
                 <div class="quote-box">
@@ -237,7 +237,7 @@ $auth->register();
                 </div>
 
                 <div class="visual-footer small opacity-50">
-                    &copy; <?php echo date('Y'); ?> Lumina Dining.
+                    &copy; <?php echo date('Y'); ?> Golden Bar and Restaurant.
                 </div>
             </div>
 

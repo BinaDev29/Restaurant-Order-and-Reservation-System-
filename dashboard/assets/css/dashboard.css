@@ -1,14 +1,14 @@
 :root {
     --sidebar-width: 280px;
     --header-height: 80px;
-    --primary-color: #FCDD09;
-    --dark-bg: #0a0a0a;
+    --primary-color: #D4AF37;
+    --dark-bg: #050505;
     --eth-green: #078930;
     --eth-red: #DA121A;
-    --eth-yellow: #FCDD09;
-    --card-bg: rgba(white, 0.03);
-    --border-color: rgba(255, 255, 255, 0.08);
-    --gold-gradient: linear-gradient(135deg, #FCDD09 0%, #d4af37 100%);
+    --eth-yellow: #D4AF37;
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --border-color: rgba(212, 175, 55, 0.15);
+    --gold-gradient: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #A67C00 100%);
 }
 
 /* Status Badge Ethiopian Colors */
@@ -33,7 +33,8 @@
 }
 
 .text-muted {
-    color: rgba(255, 255, 255, 0.5) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    /* Brighter for better visibility */
 }
 
 
@@ -65,7 +66,7 @@ body {
     font-family: 'Outfit', sans-serif;
     overflow-x: hidden;
     background-image:
-        radial-gradient(circle at 10% 20%, rgba(252, 221, 9, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 10% 20%, rgba(211, 175, 55, 0.08) 0%, transparent 20%),
         radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 20%);
     background-attachment: fixed;
 }
@@ -143,9 +144,9 @@ body {
 
 .stat-card:hover {
     transform: translateY(-8px);
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(252, 221, 9, 0.2);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.1);
 }
 
 /* Dashboard Summary Cards (Horizontal Layout) */
@@ -439,7 +440,7 @@ h2[style*="Playfair Display"] {
 
 /* Fix for barely visible text in some inputs */
 .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.3) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
 /* Responsive Customization */

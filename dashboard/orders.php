@@ -270,7 +270,8 @@ $orders = $controller->getOrdersWithItems();
                                             <hr class="dropdown-divider">
                                         </li>
                                         <?php if ($user['role'] === 'admin'): ?>
-                                            <li><a class="dropdown-item py-2 text-danger" href="#">Cancel Order</a></li>
+                                            <li><a class="dropdown-item py-2 text-danger" href="#"
+                                                    onclick="cancelOrder(<?php echo $order['id']; ?>)">Cancel Order</a></li>
                                         <?php endif; ?>
                                     </ul>
                                 </div>
@@ -298,7 +299,7 @@ $orders = $controller->getOrdersWithItems();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Sidebar Toggle for Mobile
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const toggle = document.getElementById('sidebarToggle');
             if (toggle) {
                 toggle.addEventListener('click', function () {
@@ -308,25 +309,122 @@ $orders = $controller->getOrdersWithItems();
         });
 
         function viewDetails(id) {
-            const modal = new Bootstrap.Modal(document.getElementById('detailsModal'));
-            modal.show();
-            // In a real app, this would fetch details via AJAX
-            document.getElementById('modalContent').innerHTML = `
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title">Order Details #ORD-${String(id).padStart(5, '0')}</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4 text-center">
-                <i class="fas fa-spinner fa-spin fa-2x text-primary-gold mb-3"></i>
-                <p>Loading full order history and receipt...</p>
-            </div>
+            const modalElement = document.getElementById('detailsModal');
+            const modal = new bootstrap.Modal(modalElement);
+            const content = document.getElementById('modalContent');
+
+            content.innerHTML = `
+                <div class="modal-body p-5 text-center">
+                    <div class="spinner-border text-primary-gold mb-3"></div>
+                    <p class="text-white-50">Fetching exquisite order details...</p>
+                </div>
             `;
+            modal.show();
+
+            fetch(`../app/api/orders.php?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const order = data.order;
+                        let itemsHtml = order.items.map(item => `
+                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+                                <img src="${item.image_url}" class="rounded-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 text-white">${item.name}</h6>
+                                    <small class="text-white-50">${item.quantity} x ${item.unit_price_fmt}</small>
+                                </div>
+                                <div class="fw-bold text-primary-gold">${item.subtotal_fmt}</div>
+                            </div>
+                        `).join('');
+
+                        content.innerHTML = `
+                            <div class="modal-header border-secondary p-4">
+                                <div>
+                                    <h5 class="modal-title fw-bold">Order #ORD-${String(order.id).padStart(5, '0')}</h5>
+                                    <small class="text-white-50">${new Date(order.created_at).toLocaleString()}</small>
+                                </div>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary-gold small text-uppercase mb-3">Customer Information</h6>
+                                        <p class="mb-1 fw-bold">${order.full_name || 'Guest User'}</p>
+                                        <p class="mb-1 text-white-50 small"><i class="fas fa-envelope me-2"></i>${order.email || 'N/A'}</p>
+                                        <p class="mb-0 text-white-50 small"><i class="fas fa-phone me-2"></i>${order.phone || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6 text-md-end">
+                                        <h6 class="text-primary-gold small text-uppercase mb-3">Order Status</h6>
+                                        <span class="status-pill status-${order.order_status}">${order.order_status}</span>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="text-primary-gold small text-uppercase mb-3">Order Items</h6>
+                                <div class="item-details-list">
+                                    ${itemsHtml}
+                                </div>
+                                
+                                <div class="mt-4 p-3 rounded-4 bg-white bg-opacity-5">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-white-50">Subtotal</span>
+                                        <span>${order.total_amount_fmt}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between pt-2 border-top border-secondary border-opacity-50">
+                                        <span class="fw-bold">Total Amount</span>
+                                        <span class="fw-bold fs-5 text-primary-gold">${order.total_amount_fmt}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-secondary p-4">
+                                <button class="btn btn-glass px-4" data-bs-dismiss="modal">Close</button>
+                                ${order.order_status === 'pending' ? `<button class="btn btn-outline-danger px-4" onclick="cancelOrder(${order.id})">Cancel Order</button>` : ''}
+                            </div>
+                        `;
+                    } else {
+                        content.innerHTML = `<div class="p-5 text-center text-danger">${data.message}</div>`;
+                    }
+                })
+                .catch(err => {
+                    content.innerHTML = `<div class="p-5 text-center text-danger">Connection Error</div>`;
+                });
         }
 
-        // Live Polling simulation
+        function cancelOrder(id) {
+            if (!confirm('Are you sure you want to cancel this order?')) return;
+
+            fetch('../app/api/orders.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'cancel', order_id: id })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+        }
+
+        // Live Polling
+        let lastOrderCount = <?php echo count($orders); ?>;
         setInterval(() => {
-            console.log("Checking for new orders...");
-        }, 30000);
+            // For a production app, we'd fetch actual counts here. 
+            // Simple refresh if count changes would be minimal implementation:
+            fetch(location.href)
+                .then(res => res.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newCards = doc.querySelectorAll('.order-card').length;
+                    if (newCards !== lastOrderCount) {
+                        // Better to show a "New Orders" toast or update DOM dynamically
+                        console.log("New items detected!");
+                        // For demo, we'll just log. In real usage: location.reload();
+                    }
+                });
+        }, 15000);
     </script>
 </body>
 

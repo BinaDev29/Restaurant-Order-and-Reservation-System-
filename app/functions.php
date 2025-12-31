@@ -49,6 +49,14 @@ function require_admin()
     }
 }
 
+function is_admin()
+{
+    if (!is_logged_in())
+        return false;
+    $user = current_user();
+    return $user && $user['role'] === 'admin';
+}
+
 function format_price($amount)
 {
     return 'ETB ' . number_format($amount, 2);

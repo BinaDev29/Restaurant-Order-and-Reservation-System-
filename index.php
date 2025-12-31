@@ -106,8 +106,8 @@ $featured = $menuModel->getFeaturedItems();
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Kitfo.jpg/800px-Kitfo.jpg"
-                        class="img-fluid rounded-4 shadow-lg border border-secondary" alt="Ethiopian Food">
+                    <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop"
+                        class="img-fluid rounded-4 shadow-lg border border-secondary" alt="Authentic Ethiopian Platter">
                 </div>
                 <div class="col-lg-6 ps-lg-5" data-aos="fade-left">
                     <h5 class="text-primary-gold text-uppercase ls-2">Our Heritage</h5>
@@ -204,7 +204,7 @@ $featured = $menuModel->getFeaturedItems();
     <section id="experience" class="section-padding position-relative overflow-hidden">
         <!-- Background Overlay -->
         <div class="position-absolute top-0 start-0 w-100 h-100"
-            style="background: url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover; opacity: 0.15; z-index: -1;">
+            style="background: url('https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2070&auto=format&fit=crop') center/cover; opacity: 0.15; z-index: -1;">
         </div>
 
         <div class="container">
@@ -273,14 +273,14 @@ $featured = $menuModel->getFeaturedItems();
                         <i class="fas fa-phone-alt text-primary-gold me-3 fa-2x"></i>
                         <div>
                             <h6 class="text-white mb-0">Call Us 24/7</h6>
-                            <p class="text-muted mb-0">+251 911 234 567</p>
+                            <p class="text-muted mb-0">+251 919 137 060</p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center">
                         <i class="fas fa-map-marker-alt text-primary-gold me-3 fa-2x"></i>
                         <div>
                             <h6 class="text-white mb-0">Location</h6>
-                            <p class="text-muted mb-0">Bole Atlas, Addis Ababa</p>
+                            <p class="text-muted mb-0">07 Tebase, Debre Berhan</p>
                         </div>
                     </div>
                 </div>
