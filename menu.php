@@ -50,19 +50,21 @@ $user = is_logged_in() ? current_user() : null;
             color: #fff;
             background-image: radial-gradient(circle at top right, rgba(212, 175, 55, 0.1), transparent 500px);
             background-attachment: fixed;
+            padding-top: 85px;
+            /* Added to prevent overlap with fixed navbar */
         }
 
         .navbar {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-rgba);
+            border-bottom: 2px solid var(--primary-gold);
             padding: 1.2rem 0;
             z-index: 1000;
         }
 
         .hero-mini {
             height: 40vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1542365857-3a3a532aad26?q=80&w=2070&auto=format&fit=crop');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.95)), url('https://images.unsplash.com/photo-1542365857-3a3a532aad26?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -70,6 +72,7 @@ $user = is_logged_in() ? current_user() : null;
             justify-content: center;
             text-align: center;
             margin-bottom: 4rem;
+            border-bottom: 3px solid var(--primary-gold);
         }
 
         .category-title {
@@ -203,8 +206,9 @@ $user = is_logged_in() ? current_user() : null;
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand text-primary-gold fw-bold" href="index.php">
-                <i class="fas fa-utensils me-2"></i> Golden Bar and Restaurant
+            <a class="navbar-brand fw-bold" href="index.php">
+                <i class="fas fa-utensils me-2 text-primary-gold"></i><span class="text-primary-gold">Golden Bar and
+                    Restaurant</span>
             </a>
 
             <div class="d-flex align-items-center gap-3">
@@ -241,9 +245,10 @@ $user = is_logged_in() ? current_user() : null;
     <!-- Hero -->
     <section class="hero-mini">
         <div class="container">
-            <h1 class="display-3 fw-bold animate__animated animate__fadeInDown text-white">Culinary Collection</h1>
-            <p class="lead text-white-50 animate__animated animate__fadeInUp">Discover Authentic Flavors & Premium
-                Dining</p>
+            <h1 class="display-3 fw-bold animate__animated animate__fadeInDown text-primary-gold"
+                style="color: #FCDD09 !important;">Golden Bar and Restaurant</h1>
+            <p class="lead text-white animate__animated animate__fadeInUp">Culinary Collection & Premium Dining
+                Experience</p>
         </div>
     </section>
 

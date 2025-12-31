@@ -33,8 +33,9 @@ $featured = $menuModel->getFeaturedItems();
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand text-primary-gold" href="index.php">
-                <i class="fas fa-utensils me-2"></i><?php echo APP_NAME; ?>
+            <a class="navbar-brand" href="index.php">
+                <i class="fas fa-utensils me-2 text-primary-gold"></i><span
+                    class="text-primary-gold"><?php echo APP_NAME; ?></span>
             </a>
             <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -63,16 +64,25 @@ $featured = $menuModel->getFeaturedItems();
                     </li>
                     <?php if (is_logged_in()): ?>
                         <li class="nav-item dropdown ms-lg-3">
-                            <a class="nav-link dropdown-toggle btn btn-primary-gold px-3 text-dark" href="#" role="button"
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                                 data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle me-1"></i> <?php echo $_SESSION['user_name']; ?>
+                                <div class="bg-primary-gold rounded-circle d-flex align-items-center justify-content-center text-dark fw-bold shadow-sm"
+                                    style="width: 38px; height: 38px; border: 2px solid rgba(255,255,255,0.1);">
+                                    <?php echo strtoupper(substr($_SESSION['user_name'], 0, 1)); ?>
+                                </div>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="dashboard/index.php">Dashboard</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark border-secondary">
+                                <li class="px-3 py-2 border-bottom border-secondary mb-2">
+                                    <small class="text-muted d-block">Signed in as</small>
+                                    <span class="fw-bold"><?php echo $_SESSION['user_name']; ?></span>
                                 </li>
-                                <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
+                                <li><a class="dropdown-item" href="dashboard/index.php"><i
+                                            class="fas fa-th-large me-2"></i>Dashboard</a></li>
+                                <li>
+                                    <hr class="dropdown-divider border-secondary">
+                                </li>
+                                <li><a class="dropdown-item text-danger" href="logout.php"><i
+                                            class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
