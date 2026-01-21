@@ -12,8 +12,7 @@ if ($user['role'] !== 'admin') {
 
 $controller = new UserController();
 
-// Handle Form Submission
-// Handle Form Submission
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         if ($_POST['action'] === 'add') {
