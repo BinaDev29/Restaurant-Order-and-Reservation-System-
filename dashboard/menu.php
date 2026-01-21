@@ -5,7 +5,7 @@ require_once '../app/controllers/MenuController.php';
 
 $controller = new MenuController();
 
-// Handle Actions
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'add') {
         $controller->store();
@@ -112,7 +112,7 @@ $categories = $controller->getCategories();
         </div>
     </div>
 
-    <!-- Add Modal -->
+   
     <div class="modal fade" id="addModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content bg-dark text-white border-secondary">
@@ -166,7 +166,7 @@ $categories = $controller->getCategories();
         </div>
     </div>
 
-    <!-- Edit Modal -->
+   
     <div class="modal fade" id="editModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content bg-dark text-white border-secondary">
@@ -235,7 +235,7 @@ $categories = $controller->getCategories();
                 document.getElementById('edit_description').value = this.dataset.description;
                 document.getElementById('edit_current_image').value = this.dataset.image;
 
-                // Reset image URL field
+                
                 document.getElementById('edit_image_url').value = '';
                 if (this.dataset.image.startsWith('http')) {
                     document.getElementById('edit_image_url').value = this.dataset.image;

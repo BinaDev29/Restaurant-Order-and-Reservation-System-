@@ -6,7 +6,6 @@ require_once '../app/controllers/OrderController.php';
 $controller = new OrderController();
 $user = current_user();
 
-// Handle Status Update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
     if (in_array($user['role'], ['admin', 'staff', 'chef', 'waiter'])) {
         $controller->updateStatus($_POST['order_id'], $_POST['status']);

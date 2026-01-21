@@ -3,12 +3,12 @@ require_once '../app/config.php';
 require_once '../app/functions.php';
 require_once '../app/controllers/ReservationController.php';
 
-require_login(); // Ensure user is logged in
+require_login(); 
 
 $controller = new ReservationController();
 $user = current_user();
 
-// Handle Actions (Admin Only)
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user['role'] === 'admin') {
     if (isset($_POST['action']) && isset($_POST['id'])) {
         $id = $_POST['id'];
@@ -39,16 +39,15 @@ $reservations = $controller->index($search);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservations | <?php echo APP_NAME; ?></title>
     
-    <!-- Fonts -->
+    
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     
-    <!-- Bootstrap 5 -->
+   
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Custom CSS -->
+   
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
