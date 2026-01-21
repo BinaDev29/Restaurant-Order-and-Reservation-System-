@@ -2,7 +2,6 @@
 require 'app/config.php';
 
 try {
-    // Disable foreign key checks to allow truncation
     $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
     $pdo->exec("TRUNCATE TABLE menu_items");
     $pdo->exec("TRUNCATE TABLE categories");

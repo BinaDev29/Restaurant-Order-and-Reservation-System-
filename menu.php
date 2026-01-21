@@ -51,7 +51,6 @@ $user = is_logged_in() ? current_user() : null;
             background-image: radial-gradient(circle at top right, rgba(212, 175, 55, 0.1), transparent 500px);
             background-attachment: fixed;
             padding-top: 85px;
-            /* Added to prevent overlap with fixed navbar */
         }
 
         .navbar {
